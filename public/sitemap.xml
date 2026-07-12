@@ -1,29 +1,1183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage — updated on every fetch -->
   <url>
     <loc>https://fakyou050-dot.github.io/iram-24/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>always</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Categories index -->
   <url>
     <loc>https://fakyou050-dot.github.io/iram-24/categories</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Radio -->
   <url>
     <loc>https://fakyou050-dot.github.io/iram-24/radio</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
+
+  <!-- Settings -->
   <url>
     <loc>https://fakyou050-dot.github.io/iram-24/settings</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.2</priority>
   </url>
+
+  <!-- Favorites -->
   <url>
     <loc>https://fakyou050-dot.github.io/iram-24/favorites</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.2</priority>
+  </url>
+
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/4d04976c-529c-4be6-97b1-4d08bcb2f12f</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Venomous snakes escape breeding farms in southern China during flooding</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/fcfadc0ee4e241a84cdc35f28ea9715e95e7e87a/335_0_4801_3841/master/4801.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=b26f7258b8e4d28ea66d3cfc30d7cd6d</image:loc>
+      <image:title>Venomous snakes escape breeding farms in southern China during flooding</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/e6f18e3c-efb3-4b02-b847-96e41eaf61db</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>‘A lot of red flags’: plans for New Zealand’s first datacentre spark concern as locals demand greater transparency</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/527d3fa7efa3135efb525f15e0d77b7379fe2335/447_0_932_746/master/932.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=c8a2e8510239f4fbffdf43a360e02aba</image:loc>
+      <image:title>‘A lot of red flags’: plans for New Zealand’s first datacentre spark concern as locals demand greater transparency</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/f32fdccf-5dcd-4de2-9657-5697495262ab</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>South Korea chip maker SK hynix rides AI boom raising $26.5bn in huge US listing</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/56998562048b43955280060cb3e828f3df52ff37/293_0_2915_2333/master/2915.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=9598a6441f232634108299b6095dc850</image:loc>
+      <image:title>South Korea chip maker SK hynix rides AI boom raising $26.5bn in huge US listing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/54ea141c-f4fd-4edd-b095-718f905d983c</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Weather tracker: Typhoon leaves people stranded on rooftops in China</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/816e021a3e138f3a281271788a07c9ea3245894b/154_0_7560_6048/master/7560.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=e2417259c8ed1a254410beab35b4fdc5</image:loc>
+      <image:title>Weather tracker: Typhoon leaves people stranded on rooftops in China</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/ec37e860-7a42-444a-bba1-b26e3de47777</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>At least 27 killed in blaze at Bangkok pub, Thai officials say</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/151eab3b0c4e453c8afb3ae48f3b11c81b30689a/0_0_4680_3744/master/4680.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=76439e9c61b6d3e3cb19c60d1da510d4</image:loc>
+      <image:title>At least 27 killed in blaze at Bangkok pub, Thai officials say</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/a9b0db13-5f58-4b1a-92dd-cf0b62d3fbed</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>UK judges begin hearing appeal over Trinidad and Tobago anti-gay law</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/df099147619de4c1f6a96fd8bb43231d50b1eca4/523_0_3561_2850/master/3561.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=fa32eba055a8cafd018630403f3a0e2a</image:loc>
+      <image:title>UK judges begin hearing appeal over Trinidad and Tobago anti-gay law</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/40979e4b-fdaf-4884-98ac-d664526ee47b</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Mexico investigates whether US lied about role in capture of drug lord</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/d0cfc80c5603c13819ba56c51101b2175286d613/378_0_2678_2143/master/2678.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=3e08e0f3ae95d4bb57c7e897404c3e56</image:loc>
+      <image:title>Mexico investigates whether US lied about role in capture of drug lord</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/efd13caa-4cee-4267-8515-5f86344b7860</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Venezuela quake death toll passes 4,300 as scale of recovery effort looms large</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/45bfd090b2fc996f49cae89b6964db6583c5179e/876_0_5000_4000/master/5000.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=a0200f32904d618c7b42e114e12a816f</image:loc>
+      <image:title>Venezuela quake death toll passes 4,300 as scale of recovery effort looms large</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/26e5505a-7ee9-4ace-be42-4ff6bef30cb3</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Toronto shooting: two dead and four injured at Salsa on St Clair street festival</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/03ea8ebd47324289b87f52874c1ce05a57e91f67/249_0_3780_3024/master/3780.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=0ee1aeadeb515b1687fd2b34b8c306cc</image:loc>
+      <image:title>Toronto shooting: two dead and four injured at Salsa on St Clair street festival</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/182a492b-f326-4173-80d1-c45228853149</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>A revolution in ruins: fury amid the rubble of a housing project in quake-hit Venezuela</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/8837b4351cdfd5cbb0e4ffb5b1620d1b8acfdc52/0_0_5840_4672/master/5840.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=1bce153992e3864bd8887ac1e7f79c6b</image:loc>
+      <image:title>A revolution in ruins: fury amid the rubble of a housing project in quake-hit Venezuela</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/0709d779-0c68-4d62-8118-0eb559dcba57</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>LGBTQ+ cruise ship refused entry to Egypt days after Turkey turned it away</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/cb64db381071a26d7d1ec4f5be1dd6a4cec35e1b/373_0_2915_2333/master/2915.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=657bd343268c53ef0b7f90b382be7899</image:loc>
+      <image:title>LGBTQ+ cruise ship refused entry to Egypt days after Turkey turned it away</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/0006c966-a10c-4436-899e-645318d6a4e5</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Furore in Nigeria over fake federal agency set up in government HQ</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/f80796421f1ba8310e6cf11d9923b0d36fda17d6/584_0_3309_2649/master/3309.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=2c7e4088119348a28d3bdfa3bae10781</image:loc>
+      <image:title>Furore in Nigeria over fake federal agency set up in government HQ</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/39ca6d6f-dfc6-4317-ab3c-ba0928c7af95</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Developing countries spend more repaying foreign debt than on education, UN reveals</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/1f3499a36b13998727100bda701915513e4c6156/149_0_1890_1512/master/1890.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=3a9965c4a40c281dd153f2e8e18170a6</image:loc>
+      <image:title>Developing countries spend more repaying foreign debt than on education, UN reveals</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/f96234df-01d2-4b1b-828e-1c9ed5f234f7</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Nigeria says army has killed 300 bandits in north-western state of Zamfara</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/d858003c23f5b83b5571c5f6ef15e6cd9be9eebc/753_0_5800_4640/master/5800.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=a005778c97ec1794e7dd4edfc5732eb0</image:loc>
+      <image:title>Nigeria says army has killed 300 bandits in north-western state of Zamfara</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/eba0a280-9256-4927-9445-b55257c775ba</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>First patients enrolled in record-breaking Ebola treatment trial in DRC</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://i.guim.co.uk/img/media/b5a234cedfbdf2689683190861251d50d942e050/416_0_6091_4873/master/6091.jpg?width=140&amp;amp;quality=85&amp;amp;auto=format&amp;amp;fit=max&amp;amp;s=86950fd5e1ad95b2dd03d3caec82b943</image:loc>
+      <image:title>First patients enrolled in record-breaking Ebola treatment trial in DRC</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/b84e507e-3261-47bb-b666-da522e7c5994</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Trump administration subpoenas New York Times journalists over Air Force One reporting</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/a1ec/live/f2614840-7d30-11f1-8f06-e145dd803033.jpg</image:loc>
+      <image:title>Trump administration subpoenas New York Times journalists over Air Force One reporting</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/f73cf812-f9d2-4f9a-bdb8-3e0188b18482</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>US Democrat Ro Khanna says he was detained by armed Israeli settlers</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/892a/live/ccf1fdf0-7d46-11f1-8417-c9f35e2ce384.jpg</image:loc>
+      <image:title>US Democrat Ro Khanna says he was detained by armed Israeli settlers</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/167fe081-f625-4eef-8d70-bc2623c4c0d3</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Polish PM pledges memorial to victims of WW2 &apos;genocide by Ukrainian nationalists&apos;</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/50bb/live/5cc44ba0-7d50-11f1-926f-c90d1bcfbc84.jpg</image:loc>
+      <image:title>Polish PM pledges memorial to victims of WW2 &apos;genocide by Ukrainian nationalists&apos;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/35c51e7b-7ee2-4901-b056-6944b66e471e</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Muslim judge in India faces death threats after convicting &apos;cow vigilantes&apos;</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9b9e/live/2a507da0-7bf8-11f1-b447-c332f78126d1.jpg</image:loc>
+      <image:title>Muslim judge in India faces death threats after convicting &apos;cow vigilantes&apos;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/066220e4-88a4-4c35-838c-4b76d4da83c4</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>At least two killed in Toronto street festival shooting</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/94a2/live/bfc51ee0-7d92-11f1-b0c0-b9b367ec5905.jpg</image:loc>
+      <image:title>At least two killed in Toronto street festival shooting</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/1a467c47-d005-494d-adae-69ea8b92a181</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>South Africa says more than 53,000 foreigners deported in migration campaign</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/95a2/live/dc811170-7e22-11f1-a1b8-3d436696a874.jpg</image:loc>
+      <image:title>South Africa says more than 53,000 foreigners deported in migration campaign</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/948b17d7-8a88-4a3d-82c1-cae976a70ed2</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Former Emir of Qatar Sheikh Hamad bin Khalifa Al Thani dies aged 74</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d015/live/7ee2a4e0-7df8-11f1-9800-45cddfec00b9.jpg</image:loc>
+      <image:title>Former Emir of Qatar Sheikh Hamad bin Khalifa Al Thani dies aged 74</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/40c61dc6-c42f-4b14-9790-a4d6a8f823f7</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>T. rex could become most expensive fossil ever - but it&apos;s a ​problem for scientists</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6771/live/98eee880-7c5e-11f1-bee8-53ce494e1abc.jpg</image:loc>
+      <image:title>T. rex could become most expensive fossil ever - but it&apos;s a ​problem for scientists</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/47759b37-e24c-4d0a-81c7-a70d4681c1b6</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>David Willey, esteemed BBC Vatican correspondent, dies aged 93</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0c5d/live/b0df0c60-7e05-11f1-afb0-9dae682daff3.jpg</image:loc>
+      <image:title>David Willey, esteemed BBC Vatican correspondent, dies aged 93</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/69ff0923-85b2-48b2-87ae-09406a66d908</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>China evacuates nearly two million people as powerful typhoon makes landfall</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/e90d/live/996516b0-7dce-11f1-b976-0b9c15b0ccfc.jpg</image:loc>
+      <image:title>China evacuates nearly two million people as powerful typhoon makes landfall</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/1a958cde-8bda-48f0-bd98-54ad7d9da9f5</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Badly burned British couple rescued from ravine during Spain wildfires, reports say</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/586b/live/21e5a140-7df6-11f1-a2c7-db8990d0c651.jpg</image:loc>
+      <image:title>Badly burned British couple rescued from ravine during Spain wildfires, reports say</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/161fd7c5-4a46-4be6-a678-5f1643b3c0c0</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>Anthony Zurcher: From Trump critic to ally, Lindsey Graham was a political survivor of the Maga era</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/dc5d/live/bd733900-7e29-11f1-bee8-53ce494e1abc.jpg</image:loc>
+      <image:title>Anthony Zurcher: From Trump critic to ally, Lindsey Graham was a political survivor of the Maga era</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/fc1f5e37-4b16-4854-82db-5bad8fc89b72</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>US senator and close Trump ally Lindsey Graham dies after &apos;brief and sudden illness&apos;</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8847/live/fa519f30-7e2c-11f1-91a9-7f19a8ed5bed.jpg</image:loc>
+      <image:title>US senator and close Trump ally Lindsey Graham dies after &apos;brief and sudden illness&apos;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/9d3f2f2c-1de3-49f5-a338-2f1029a6e987</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>US insists Strait of Hormuz is open as it exchanges strikes with Iran</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4e75/live/a70b6a10-7e07-11f1-afb0-9dae682daff3.jpg</image:loc>
+      <image:title>US insists Strait of Hormuz is open as it exchanges strikes with Iran</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/575c8daa-2074-41ec-a1d9-5243ff96deb2</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>At least 27 killed in Bangkok bar fire</news:title>
+      <news:keywords>World</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/51a3/live/23c24750-7e34-11f1-b976-0b9c15b0ccfc.jpg</image:loc>
+      <image:title>At least 27 killed in Bangkok bar fire</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/7e779b8a-bdba-47a4-80f4-b43eff637efe</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>ترامب: وجهنا لإيران ضربة &quot;قوية جدا&quot; في الهجمات الأخيرة</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/09/1879890/95/53/1-1879890.jpg</image:loc>
+      <image:title>ترامب: وجهنا لإيران ضربة &quot;قوية جدا&quot; في الهجمات الأخيرة</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/85f75151-213e-4783-8be5-eacdad4e3f9b</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>دول عربية تعلن الحداد على وفاة أمير قطر السابق</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v2/2026/07/12/1880401/95/53/1-1880401.jpg</image:loc>
+      <image:title>دول عربية تعلن الحداد على وفاة أمير قطر السابق</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/6c1b36a3-a12a-4d4b-bdf3-63a265a1349d</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>مصر.. الكشف عن مقبرة &quot;باسر&quot; بالبر الغربي في الأقصر</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880447/95/53/1-1880447.jpg</image:loc>
+      <image:title>مصر.. الكشف عن مقبرة &quot;باسر&quot; بالبر الغربي في الأقصر</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/41226ab6-e13d-4b77-bbd6-2f53b5cf2aa8</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>أكسيوس: الجيش الأميركي نفذ ضربات عدة ضد أهداف إيرانية</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880449/95/53/1-1880449.jpg</image:loc>
+      <image:title>أكسيوس: الجيش الأميركي نفذ ضربات عدة ضد أهداف إيرانية</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/986adbb6-b3c9-4809-8e1c-923a7e1e775c</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>الكويت: تعرض 3 مراكز حدودية لهجمات عدوانية</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880452/95/53/1-1880452.jpg</image:loc>
+      <image:title>الكويت: تعرض 3 مراكز حدودية لهجمات عدوانية</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/24bc569f-1437-4afd-9bbf-a38f0ecf07c6</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>الكنيست يحدد موعد الانتخابات التشريعية.. هؤلاء أبرز المرشحين</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v2/2026/05/20/1870567/95/53/1-1870567.jpg</image:loc>
+      <image:title>الكنيست يحدد موعد الانتخابات التشريعية.. هؤلاء أبرز المرشحين</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/71aa8950-9af8-4d9d-9d9c-359838457fe4</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>واشنطن وطهران على حافة حرب شاملة بسبب مضيق هرمز</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880455/95/53/1-1880455.jpg</image:loc>
+      <image:title>واشنطن وطهران على حافة حرب شاملة بسبب مضيق هرمز</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/d68eded0-99b1-416b-bb80-86b7932da0dd</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>فيفا يكشف معدلات حضور الجماهير القياسي في مونديال 2026</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880457/95/53/1-1880457.jpg</image:loc>
+      <image:title>فيفا يكشف معدلات حضور الجماهير القياسي في مونديال 2026</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/09d8df9c-1d4e-4dbb-b649-72baa7a0d53c</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>كوناتي يرد على يامال: منتخب فرنسا لا يخاف أحدا</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/12/1880464/95/53/1-1880464.jpg</image:loc>
+      <image:title>كوناتي يرد على يامال: منتخب فرنسا لا يخاف أحدا</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/609e214f-eb26-4a26-86c5-62bbddff6b85</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>الإمارات تدين الهجوم العدواني على مراكز حدودية في الكويت</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v6/2026/05/17/1869953/95/53/1-1869953.jpg</image:loc>
+      <image:title>الإمارات تدين الهجوم العدواني على مراكز حدودية في الكويت</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/49a62b95-0e39-4e0e-9b2b-ba77008bc389</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>كارثة في بانكوك.. حريق ملهى ليلي يقتل 27 شخصا</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/13/1880474/95/53/1-1880474.jpg</image:loc>
+      <image:title>كارثة في بانكوك.. حريق ملهى ليلي يقتل 27 شخصا</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/0086be04-faa7-428a-9445-6974dafa46fa</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>ضربات أميركية جديدة.. انفجارات تهز الساحل الإيراني</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/09/1879908/95/53/1-1879908.jpg</image:loc>
+      <image:title>ضربات أميركية جديدة.. انفجارات تهز الساحل الإيراني</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/7636d9ba-a03d-49c0-a642-1fbcfed767d6</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>بريطانيا تحت الإنذار الأحمر.. خطر حرائق &quot;استثنائي&quot;</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/13/1880477/95/53/1-1880477.jpg</image:loc>
+      <image:title>بريطانيا تحت الإنذار الأحمر.. خطر حرائق &quot;استثنائي&quot;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/756da69a-78a8-4c10-b102-f87797dc3b75</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>تصعيد في هرمز.. الجيش الأميركي يعلن إحباط هجوم إيراني</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/08/1879709/95/53/1-1879709.jpg</image:loc>
+      <image:title>تصعيد في هرمز.. الجيش الأميركي يعلن إحباط هجوم إيراني</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/c8b9b5d4-faa6-4d90-bc2c-ae437eea4935</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>إيران: الضربات الأميركية نسفت المسار الدبلوماسي</news:title>
+      <news:keywords>عربي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://images.skynewsarabia.com/images/v1/2026/07/13/1880480/95/53/1-1880480.jpg</image:loc>
+      <image:title>إيران: الضربات الأميركية نسفت المسار الدبلوماسي</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/9760b550-b2f9-4a95-9eae-a879a657d8e3</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>خالد حفتر: المؤسسة العسكرية الليبية يجب أن تبقى بعيدة عن التجاذبات السياسية</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a53fc204c59b743ae7d2025.jpg</image:loc>
+      <image:title>خالد حفتر: المؤسسة العسكرية الليبية يجب أن تبقى بعيدة عن التجاذبات السياسية</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/d63cd6bd-fc09-4bd3-a712-b1a063f9496f</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>أوليانوف: قصف محطة بوشهر الكهروذرية قد يتسبب بعواقب كارثية</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5401764236041e07330a3b.jpg</image:loc>
+      <image:title>أوليانوف: قصف محطة بوشهر الكهروذرية قد يتسبب بعواقب كارثية</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/01771e8f-cdc6-4e81-beae-567035001b91</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>بخط يده.. الكشف عن تفاصيل وثيقة كتبها يحيى السنوار قبل عام من &quot;طوفان الأقصى&quot;</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5402734c59b744391e5e09.jpg</image:loc>
+      <image:title>بخط يده.. الكشف عن تفاصيل وثيقة كتبها يحيى السنوار قبل عام من &quot;طوفان الأقصى&quot;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/6cf38b3e-dc0b-4d27-981c-a5cee083b41a</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>&quot;دعاية إيرانية&quot;.. القيادة المركزية الأمريكية تنفي مقتل ثلاثة عسكريين في الكويت</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a54058b4c59b7453001f7f7.jpg</image:loc>
+      <image:title>&quot;دعاية إيرانية&quot;.. القيادة المركزية الأمريكية تنفي مقتل ثلاثة عسكريين في الكويت</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/5fd1f49a-9b55-4074-9490-b2fac268d9b3</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>سينر يهزم زفيريف في مباراة مثيرة ليحتفظ بلقب ويمبلدون</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5403494236041c0d5f37ad.png</image:loc>
+      <image:title>سينر يهزم زفيريف في مباراة مثيرة ليحتفظ بلقب ويمبلدون</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/44fa5959-6cd9-4db5-a4cc-96e18a738cc1</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>&quot;ليس اشتباكا عسكريا&quot;.. الخارجية الإيرانية ترد على تصريح المتحدث باسم الأمم المتحدة</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5409d34236041b5562ee05.jpg</image:loc>
+      <image:title>&quot;ليس اشتباكا عسكريا&quot;.. الخارجية الإيرانية ترد على تصريح المتحدث باسم الأمم المتحدة</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/c4630df7-bd62-44e4-af3b-6dd20a61cf09</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>موسكو تشدد.. مراعاة مصالحنا شرط للحوار</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5409bc4c59b740d50534f5.png</image:loc>
+      <image:title>موسكو تشدد.. مراعاة مصالحنا شرط للحوار</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/95340820-92f7-4e38-a7f8-107bc5f0fbd8</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>القيادة المركزية الأمريكية تعلن شن هجمات جديدة ضد إيران والتلفزيون الرسمي يكشف تفاصيل الضربات</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a54109a4c59b743ae7d2038.jpg</image:loc>
+      <image:title>القيادة المركزية الأمريكية تعلن شن هجمات جديدة ضد إيران والتلفزيون الرسمي يكشف تفاصيل الضربات</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/58c9adf4-ca13-4bcf-af28-f8edab3d136c</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>إيران: واشنطن ترتكب أبشع جرائم الحرب واستمرار العدوان يلغي التزامنا بالمذكرة</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a540b7b4236041ca8014587.jpg</image:loc>
+      <image:title>إيران: واشنطن ترتكب أبشع جرائم الحرب واستمرار العدوان يلغي التزامنا بالمذكرة</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/a9955887-8f3d-4d7a-bf2b-e6dcd0d927d3</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>سفير روسيا: موسكو تعتبر دعم الطيران النرويجي لمهام الناتو النووية تقويضا لمعاهدة عدم الانتشار</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a54089c4236043c2800b7b8.jpg</image:loc>
+      <image:title>سفير روسيا: موسكو تعتبر دعم الطيران النرويجي لمهام الناتو النووية تقويضا لمعاهدة عدم الانتشار</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/b77a5533-53e0-4b99-b3e5-df4943d65b64</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>إيران توجه طلبا عاجلا لدول الخليج العربية بعد تحذيرات أممية من عواقب كارثية</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a540e724236041b5562ee1a.png</image:loc>
+      <image:title>إيران توجه طلبا عاجلا لدول الخليج العربية بعد تحذيرات أممية من عواقب كارثية</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/ea4cb7fa-3a8b-4408-8058-6974a31dd4a1</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>ثورة مرتقبة في كأس العالم.. مونديال 2030 قد يشهد مشاركة 64 منتخبا</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5413394236041d1127ab10.png</image:loc>
+      <image:title>ثورة مرتقبة في كأس العالم.. مونديال 2030 قد يشهد مشاركة 64 منتخبا</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/fbdf8dc6-e20e-48d7-9de5-1b4292419003</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>اتصالات مصرية لاحتواء أزمة إيران</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a54171c4c59b741af53accc.jpg</image:loc>
+      <image:title>اتصالات مصرية لاحتواء أزمة إيران</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/5aa84ad0-77af-4668-a08b-79627b3666e8</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>نفور دولي من الدولار.. إرهاصات الانهيار</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a5417f84236041ca8014598.jpg</image:loc>
+      <image:title>نفور دولي من الدولار.. إرهاصات الانهيار</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fakyou050-dot.github.io/iram-24/article/b917dece-6f15-470e-9b01-27169e042c00</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <news:news>
+      <news:publication>
+        <news:name>إيرام 24</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:publication_date>Sun, 12 Jul 2026 22:45:28 GMT</news:publication_date>
+      <news:title>نبض اليوم الـ33 من كأس العالم 2026.. اكتمال عقد نصف النهائي</news:title>
+      <news:keywords>دولي</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://cdnv.russiatoday.com/media/pics/2026.07/thumbnail/6a52ef1c4c59b717be44850f.jpg</image:loc>
+      <image:title>نبض اليوم الـ33 من كأس العالم 2026.. اكتمال عقد نصف النهائي</image:title>
+    </image:image>
   </url>
 </urlset>
