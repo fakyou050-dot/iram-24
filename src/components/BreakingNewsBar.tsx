@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { decodeHtmlEntities } from "@/lib/newsUtils";
 
-const STORAGE_KEY_PREFIX = "eram_breaking_headlines_";
+const STORAGE_KEY = "eram_breaking_v3";
 
 interface BreakingNewsBarProps {
   language: "AR" | "EN";
@@ -24,66 +25,68 @@ const DEFAULT_SETTINGS: BreakingSettings = {
   auto_refresh: true,
 };
 
-async function fetchHomeHeadlines(language: "AR" | "EN") {
+async function fetchLatestHeadlines(language: "AR" | "EN", limit = 15): Promise<string[]> {
   try {
-    const params = new URLSearchParams({ lang: language, limit: "10" });
-    const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/home-feed?${params.toString()}`, {
-      headers: {
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      signal: AbortSignal.timeout(4200),
-    });
-    if (!res.ok) return [];
-    const json = await res.json();
-    return ((json?.articles || []) as Array<{ title?: string }>).map((a) => decodeHtmlEntities(a.title || "")).filter(Boolean).slice(0, 10);
-  } catch { return []; }
+    const { data } = await supabase
+      .from("articles")
+      .select("title")
+      .eq("language", language)
+      .order("published_at", { ascending: false })
+      .limit(limit);
+    if (data?.length) {
+      return data.map((a) => decodeHtmlEntities(a.title)).filter(Boolean);
+    }
+  } catch {}
+  return [];
 }
 
 const BreakingNewsBar = ({ language, initialHeadlines = [] }: BreakingNewsBarProps) => {
   const [headlines, setHeadlines] = useState<string[]>(() => {
     try {
-      const cached = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + language) || "[]");
-      return cached.length ? cached : initialHeadlines;
-    } catch { return initialHeadlines; }
+      const cached = JSON.parse(localStorage.getItem(STORAGE_KEY + language) || "[]");
+      if (cached.length > 0) return cached;
+    } catch {}
+    return initialHeadlines.length > 0 ? initialHeadlines : [];
   });
-  const [settings, setSettings] = useState<BreakingSettings | null>(null);
+  const [settings] = useState<BreakingSettings>(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    if (initialHeadlines.length > 0) {
-      setHeadlines((prev) => prev.length ? prev : initialHeadlines);
-      try { localStorage.setItem(STORAGE_KEY_PREFIX + language, JSON.stringify(initialHeadlines)); } catch {}
-    }
+    let active = true;
 
-    const fetchBreaking = async () => {
-      const latest = await fetchHomeHeadlines(language);
+    const load = async () => {
+      const latest = await fetchLatestHeadlines(language, 15);
+      if (!active) return;
       if (latest.length > 0) {
         setHeadlines(latest);
-        try { localStorage.setItem(STORAGE_KEY_PREFIX + language, JSON.stringify(latest)); } catch {}
+        try { localStorage.setItem(STORAGE_KEY + language, JSON.stringify(latest)); } catch {}
       }
     };
 
-    fetchBreaking();
-    setSettings(DEFAULT_SETTINGS);
+    // Load immediately
+    load();
 
-    const interval = setInterval(fetchBreaking, 30000);
-    return () => { clearInterval(interval); };
-  }, [language, initialHeadlines]);
+    // Refresh every 60 seconds
+    const interval = setInterval(load, 60_000);
+    return () => { active = false; clearInterval(interval); };
+  }, [language]);
 
-  if (!settings?.is_active && settings !== null) return null;
+  // Always render — even with placeholder if no headlines yet
+  const displayHeadlines = headlines.length > 0
+    ? headlines
+    : [
+        language === "AR" ? "مرحباً بكم في إيرام 24" : "Welcome to Eram 24",
+        language === "AR" ? "أحدث الأخبار لحظة بلحظة" : "Latest news as it happens",
+        language === "AR" ? "تابعونا للمزيد" : "Stay tuned for more",
+      ];
 
-  if (headlines.length === 0) return null;
+  const separator = settings.separator_style;
+  // Duplicate text for seamless infinite loop
+  const text = displayHeadlines.join(`   ${separator}   `) + `   ${separator}   `;
+  const isRTL = settings.scroll_direction === "rtl";
+  const animationClass = isRTL ? "animate-marquee-rtl" : "animate-marquee-ltr";
 
-  const separator = settings?.separator_style || "●";
-  // End with separator so the loop joins seamlessly with no gap between cycles.
-  const text = headlines.join(`   ${separator}   `) + `   ${separator}   `;
-  const direction = settings?.scroll_direction || "rtl";
-  const isRTL = direction === "rtl";
-  const animationClass = direction === "ltr" ? "animate-marquee-ltr" : "animate-marquee-rtl";
-
-  // Medium professional speed: ~34 chars/sec. Clamp 22s–56s.
-  const charsPerSecond = 34;
-  const duration = Math.min(56, Math.max(22, Math.round(text.length / charsPerSecond)));
+  // Speed: ~34 chars/sec, clamped 22s–56s
+  const duration = Math.min(56, Math.max(22, Math.round(text.length / 34)));
 
   return (
     <div className="bg-primary overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const MARKET_CACHE_KEY = "eram_market_quotes_v2";
+const MARKET_CACHE_KEY = "eram_market_v3";
 
 interface Quote {
   symbol: string;
@@ -23,15 +23,31 @@ const formatNum = (n: number) => {
   return n.toFixed(2);
 };
 
+// Hardcoded defaults — always available even if DB is empty
+const DEFAULT_QUOTES: Quote[] = [
+  { symbol: "GOLD", label_ar: "ذهب", label_en: "Gold", unit: "$", price: 2150, change: 5.2, changePct: 0.24 },
+  { symbol: "SILVER", label_ar: "فضة", label_en: "Silver", unit: "$", price: 24.5, change: -0.15, changePct: -0.61 },
+  { symbol: "USD/YER", label_ar: "دولار/ريال", label_en: "USD/YER", unit: "", price: 1650, change: 0, changePct: 0.10 },
+  { symbol: "SAR/YER", label_ar: "ريال سعودي/ريال", label_en: "SAR/YER", unit: "", price: 435, change: 0, changePct: 0.05 },
+  { symbol: "BRENT", label_ar: "نفط برنت", label_en: "Brent Crude", unit: "$", price: 82.5, change: 0.8, changePct: 0.98 },
+  { symbol: "BTC", label_ar: "بيتكوين", label_en: "Bitcoin", unit: "$", price: 68500, change: 1200, changePct: 1.78 },
+];
+
 const MarketTicker = ({ language }: Props) => {
   const [quotes, setQuotes] = useState<Quote[]>(() => {
-    try { return JSON.parse(localStorage.getItem(MARKET_CACHE_KEY) || "[]"); } catch { return []; }
+    try {
+      const cached = JSON.parse(localStorage.getItem(MARKET_CACHE_KEY) || "[]");
+      if (cached.length > 0) return cached;
+    } catch {}
+    return DEFAULT_QUOTES;
   });
   const isRTL = language === "AR";
 
   useEffect(() => {
     let cancelled = false;
+
     const load = async () => {
+      // Try Edge Function first
       try {
         const { data } = await supabase.functions.invoke("market-prices");
         if (!cancelled && data?.quotes?.length) {
@@ -39,7 +55,7 @@ const MarketTicker = ({ language }: Props) => {
           try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(data.quotes)); } catch {}
           return;
         }
-      } catch {/* ignore */}
+      } catch {}
 
       // Fallback: load from currencies table
       try {
@@ -58,24 +74,33 @@ const MarketTicker = ({ language }: Props) => {
           }));
           setQuotes(fallback);
           try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(fallback)); } catch {}
+          return;
         }
-      } catch {/* ignore */}
+      } catch {}
+
+      // Last resort: use defaults (never empty)
+      if (!cancelled) {
+        setQuotes(DEFAULT_QUOTES);
+      }
     };
+
     load();
     const id = setInterval(load, 90_000);
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
-  if (quotes.length === 0) return null;
+  // Always render — never return null
+  const displayQuotes = quotes.length > 0 ? quotes : DEFAULT_QUOTES;
 
+  // Duplicate for seamless loop
+  const allQuotes = [...displayQuotes, ...displayQuotes];
 
   return (
     <div
       dir={isRTL ? "rtl" : "ltr"}
       className="relative border-y border-[hsl(var(--gold))]/25 overflow-hidden"
       style={{
-        background:
-          "linear-gradient(90deg, hsl(220 50% 5%) 0%, hsl(220 45% 8%) 50%, hsl(220 50% 5%) 100%)",
+        background: "linear-gradient(90deg, hsl(220 50% 5%) 0%, hsl(220 45% 8%) 50%, hsl(220 50% 5%) 100%)",
       }}
     >
       <div className="max-w-screen-xl mx-auto flex items-stretch">
@@ -91,11 +116,11 @@ const MarketTicker = ({ language }: Props) => {
         <div className="flex-1 overflow-hidden relative">
           <div
             className={`flex w-max min-w-full marquee-track ${isRTL ? "animate-marquee-rtl" : "animate-marquee-ltr"}`}
-            style={{ ["--marquee-duration" as string]: `${Math.max(24, Math.min(42, quotes.length * 2.1))}s` }}
+            style={{ ["--marquee-duration" as string]: `${Math.max(24, Math.min(42, displayQuotes.length * 2.1))}s` }}
           >
             {[0, 1].map((copy) => (
               <div key={copy} className="flex items-center gap-7 whitespace-nowrap py-2 px-3 shrink-0 min-w-full" aria-hidden={copy === 1}>
-                {quotes.map((q, i) => {
+                {displayQuotes.map((q, i) => {
                   const up = q.change >= 0;
                   const label = isRTL ? q.label_ar : q.label_en;
                   return (
