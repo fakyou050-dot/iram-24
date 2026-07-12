@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin-dashboard-ERAM-SECURE
+Disallow: /radio/admin
+
+Sitemap: https://iram-n.lovable.app/sitemap.xml

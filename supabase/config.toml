@@ -1,0 +1,20 @@
+project_id = "twqwwtgayqhjuyzngejr"
+
+[functions.fetch-news]
+verify_jwt = false
+
+[functions.setup-admin]
+verify_jwt = false
+
+[functions.detect-rss]
+verify_jwt = false
+
+[functions.ai-news-helper]
+verify_jwt = false
+
+[functions.analyze-source]
+verify_jwt = false
+
+[functions.article-share]
+verify_jwt = false
+

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS articles_hash_unique ON public.articles (hash);
