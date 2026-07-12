@@ -19,6 +19,7 @@ import RadioSheet from "./components/radio/RadioSheet";
 import MiniPlayer from "./components/radio/MiniPlayer";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { startAutoFetch } from "./lib/autoFetch";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,15 @@ const SPARedirect = () => {
   return null;
 };
 
+// Start auto-fetch on app load
+const AutoFetchInit = () => {
+  useEffect(() => {
+    const cleanup = startAutoFetch(30 * 60 * 1000); // every 30 minutes
+    return cleanup;
+  }, []);
+  return null;
+};
+
 const BodyPaddingForPlayer = () => {
   const { currentId, sheetOpen } = useRadio();
   useEffect(() => {
@@ -63,6 +73,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <AutoFetchInit />
         <RadioProvider>
           <a href="#main-content" className="skip-to-content">تخطي إلى المحتوى</a>
           <SPARedirect />

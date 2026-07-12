@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { autoFetchNews } from "@/lib/autoFetch";
 import { RefreshCw, CheckCircle, Eraser, AlertTriangle } from "lucide-react";
 
 const FetchControl = () => {
@@ -26,14 +27,26 @@ const FetchControl = () => {
     setFetching(true);
     setResult(null);
     try {
+      // Try Edge Function first
       const res = await supabase.functions.invoke("fetch-news");
       if (res.data && !res.error) {
         setResult(`تم جلب ${res.data.count || 0} مقال جديد`);
+        setFetching(false);
+        loadSettings();
+        return;
+      }
+    } catch {/* Edge Function not available */}
+
+    // Fallback: client-side fetch
+    try {
+      const count = await autoFetchNews();
+      if (count > 0) {
+        setResult(`تم جلب ${count} مقال جديد عبر الجلب المباشر`);
       } else {
-        setResult("⚠️ خدمة الجلب غير منشرة. استخدم صفحة المصادر للجلب اليدوي.");
+        setResult("لا توجد مقالات جديدة حالياً أو لم يحن وقت الجلب بعد");
       }
     } catch {
-      setResult("⚠️ خدمة الجلب غير متاحة. تأكد من نشر Edge Functions على Supabase.");
+      setResult("حدث خطأ أثناء الجلب");
     }
     setFetching(false);
     loadSettings();
