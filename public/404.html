@@ -4,11 +4,88 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إيرام 24</title>
+    <meta property="og:site_name" content="إيرام 24" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script>
       (function () {
         var l = window.location;
         var repoBase = '/iram-24';
         var path = l.pathname.startsWith(repoBase) ? l.pathname.slice(repoBase.length) : l.pathname;
+
+        // Article page — fetch OG data from Supabase for crawlers
+        var articleMatch = path.match(/^\/article\/([a-f0-9-]+)$/);
+        if (articleMatch) {
+          var articleId = articleMatch[1];
+          var SUPABASE_URL = 'https://zifhmbbhqgoqvqeofhtw.supabase.co';
+          var ANON_KEY = 'eyJhbG…5BZ8';
+          var target = repoBase + '/?/article/' + articleId;
+
+          // Fetch article data for OG tags
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', SUPABASE_URL + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId, false);
+            xhr.setRequestHeader('apikey', ANON_KEY);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + ANON_KEY);
+            xhr.send();
+
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              if (data && data.length > 0) {
+                var article = data[0];
+                var title = (article.title || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+                var desc = (article.description || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').substring(0, 200);
+                var image = article.image_url || '';
+                var articleUrl = SUPABASE_URL + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId;
+
+                // Set OG tags
+                document.title = title + ' | إيرام 24';
+
+                var setMeta = function(prop, content) {
+                  var el = document.createElement('meta');
+                  el.setAttribute('property', prop);
+                  el.setAttribute('content', content);
+                  document.head.appendChild(el);
+                };
+
+                var setName = function(name, content) {
+                  var el = document.createElement('meta');
+                  el.setAttribute('name', name);
+                  el.setAttribute('content', content);
+                  document.head.appendChild(el);
+                };
+
+                setMeta('og:title', title);
+                setMeta('og:description', desc);
+                setMeta('og:url', 'https://fakyou050-dot.github.io' + repoBase + '/article/' + articleId);
+                setMeta('og:type', 'article');
+                setName('description', desc);
+                setName('twitter:title', title);
+                setName('twitter:description', desc);
+
+                if (image) {
+                  setMeta('og:image', image);
+                  setMeta('og:image:width', '1200');
+                  setMeta('og:image:height', '630');
+                  setName('twitter:image', image);
+                  setName('twitter:card', 'summary_large_image');
+                } else {
+                  setName('twitter:card', 'summary');
+                }
+
+                // Redirect humans immediately
+                l.replace(target);
+                return;
+              }
+            }
+          } catch(e) {}
+
+          // Fallback redirect
+          l.replace(target);
+          return;
+        }
+
+        // Default SPA redirect
         var redirect = repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash;
         l.replace(redirect);
       })();
