@@ -33,8 +33,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Add SPA fallback
-        run: cp dist/index.html dist/404.html
+      - name: Verify SPA fallback exists
+        run: test -f dist/404.html && echo "404.html exists from public/" || cp dist/index.html dist/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

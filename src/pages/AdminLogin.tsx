@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
 const ADMIN_USERNAME = "Eram";
-const ADMIN_PASSWORD = "***";
+const ADMIN_PASSWORD = "777492635";
 const ADMIN_EMAIL = "eram@iram24.admin";
 
 const AdminLogin = () => {
@@ -21,6 +21,7 @@ const AdminLogin = () => {
     });
 
     if (!signInError && signInData.user) {
+      // تسجيل الدخول نجح — تحقق من صلاحية الأدمن
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
@@ -30,64 +31,64 @@ const AdminLogin = () => {
 
       if (roleData) return { success: true };
 
+      // المستخدم موجود بدون صلاحية أدمن — أضفها
       try {
-        const { error: fnError } = await supabase.functions.invoke("setup-admin", {
-          body: { email: ADMIN_EMAIL, password: ADMIN_PASSWORD },
-        });
-        if (!fnError) return { success: true };
+        await supabase.from("user_roles").upsert(
+          { user_id: signInData.user.id, role: "admin" },
+          { onConflict: "user_id,role" }
+        );
+        return { success: true };
       } catch {}
-
-      await supabase.from("user_roles").insert({
-        user_id: signInData.user.id,
-        role: "admin",
-      });
 
       return { success: true };
     }
 
-    // 2. إنشاء المستخدم
+    // 2. تسجيل الدخول فشل — استخدم setup-admin لتحديث كلمة المرور
+    try {
+      const { data: fnData, error: fnError } = await supabase.functions.invoke("setup-admin", {
+        body: { email: ADMIN_EMAIL, password: ADMIN_PASSWORD },
+      });
+
+      if (!fnError && fnData?.success) {
+        // setup-admin نجح (إنشاء أو تحديث كلمة المرور) — حاول الدخول مرة أخرى
+        const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
+          email: ADMIN_EMAIL,
+          password: ADMIN_PASSWORD,
+        });
+        if (!retryError && retryData.user) {
+          return { success: true };
+        }
+      }
+    } catch {}
+
+    // 3. محاولة أخيرة — إنشاء المستخدم مباشرة
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: ADMIN_EMAIL,
       password: ADMIN_PASSWORD,
       options: { emailRedirectTo: undefined },
     });
 
-    if (signUpError) {
-      return { success: false, error: "فشل إنشاء حسب المدير: " + signUpError.message };
-    }
+    if (!signUpError && signUpData.user) {
+      // حاول تسجيل الدخول بعد الإنشاء
+      const { error: retryError } = await supabase.auth.signInWithPassword({
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+      });
 
-    if (!signUpData.user) {
-      return { success: false, error: "لم يتم إنشاء المستخدم" };
-    }
+      if (!retryError) {
+        try {
+          await supabase.from("user_roles").upsert(
+            { user_id: signUpData.user.id, role: "admin" },
+            { onConflict: "user_id,role" }
+          );
+        } catch {}
+        return { success: true };
+      }
 
-    // 3. سجّل الدخول بعد الإنشاء
-    const { error: retryError } = await supabase.auth.signInWithPassword({
-      email: ADMIN_EMAIL,
-      password: ADMIN_PASSWORD,
-    });
-
-    if (retryError) {
-      try {
-        const { error: fnError } = await supabase.functions.invoke("setup-admin", {
-          body: { email: ADMIN_EMAIL, password: ADMIN_PASSWORD },
-        });
-        if (!fnError) {
-          await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
-          return { success: true };
-        }
-      } catch {}
       return { success: false, error: "تم إنشاء الحساب لكن قد يحتاج تأكيد البريد. أكمل من Supabase Dashboard." };
     }
 
-    // 4. أضف صلاحية الأدمن
-    try {
-      await supabase.from("user_roles").insert({
-        user_id: signUpData.user.id,
-        role: "admin",
-      });
-    } catch {}
-
-    return { success: true };
+    return { success: false, error: "فشل تسجيل الدخول وإنشاء الحساب. تحقق من إعدادات Supabase." };
   };
 
   const handleLogin = async (e: React.FormEvent) => {

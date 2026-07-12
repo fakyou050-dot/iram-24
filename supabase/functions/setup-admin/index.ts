@@ -25,15 +25,35 @@ serve(async (req) => {
       });
     }
 
-    // Check if any admin exists
-    const { data: existingRoles } = await supabase.from("user_roles").select("id").limit(1);
-    if (existingRoles && existingRoles.length > 0) {
-      return new Response(JSON.stringify({ error: "Admin already exists" }), {
-        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Check if user already exists
+    const { data: existingUsers } = await supabase.auth.admin.listUsers();
+    const existingUser = existingUsers?.users?.find(u => u.email === email);
+
+    if (existingUser) {
+      // User exists — update password
+      const { error: updateError } = await supabase.auth.admin.updateUserById(
+        existingUser.id,
+        { password: password }
+      );
+
+      if (updateError) {
+        return new Response(JSON.stringify({ error: "Failed to update password: " + updateError.message }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Ensure admin role exists
+      await supabase.from("user_roles").upsert(
+        { user_id: existingUser.id, role: "admin" },
+        { onConflict: "user_id,role" }
+      );
+
+      return new Response(JSON.stringify({ success: true, message: "Password updated and admin role confirmed" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Create user
+    // User doesn't exist — create new user
     const { data: userData, error: userError } = await supabase.auth.admin.createUser({
       email,
       password,

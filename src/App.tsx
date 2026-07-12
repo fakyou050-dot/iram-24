@@ -18,6 +18,7 @@ import { RadioProvider, useRadio } from "./contexts/RadioContext";
 import RadioSheet from "./components/radio/RadioSheet";
 import MiniPlayer from "./components/radio/MiniPlayer";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,21 @@ const ThemeInit = () => {
       document.documentElement.classList.add("light");
     }
   }, []);
+  return null;
+};
+
+// Handle SPA redirect from 404.html (GitHub Pages)
+const SPARedirect = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const search = window.location.search;
+    if (search.startsWith("?/")) {
+      const path = search.slice(2).split("&")[0];
+      const hash = window.location.hash;
+      window.history.replaceState(null, "", window.location.pathname);
+      navigate("/" + path + hash, { replace: true });
+    }
+  }, [navigate]);
   return null;
 };
 
@@ -49,6 +65,7 @@ const App = () => (
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <RadioProvider>
           <a href="#main-content" className="skip-to-content">تخطي إلى المحتوى</a>
+          <SPARedirect />
           <ScrollToTop />
           <BodyPaddingForPlayer />
           <Routes>
