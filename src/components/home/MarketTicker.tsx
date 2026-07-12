@@ -37,6 +37,27 @@ const MarketTicker = ({ language }: Props) => {
         if (!cancelled && data?.quotes?.length) {
           setQuotes(data.quotes);
           try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(data.quotes)); } catch {}
+          return;
+        }
+      } catch {/* ignore */}
+
+      // Fallback: load from currencies table
+      try {
+        const { data: currencies } = await supabase
+          .from("currencies")
+          .select("name,code,price,change_percent")
+          .eq("is_active", true);
+        if (!cancelled && currencies?.length) {
+          const fallback: Quote[] = currencies.map((c) => ({
+            symbol: c.code,
+            label_ar: c.name,
+            label_en: c.name,
+            price: Number(c.price) || 0,
+            change: 0,
+            changePct: Number(c.change_percent) || 0,
+          }));
+          setQuotes(fallback);
+          try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(fallback)); } catch {}
         }
       } catch {/* ignore */}
     };
