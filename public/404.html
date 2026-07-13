@@ -13,13 +13,31 @@
         var repoBase = '/iram-24';
         var path = l.pathname.startsWith(repoBase) ? l.pathname.slice(repoBase.length) : l.pathname;
 
+        // Static pages that can be redirected without fetching data
+        var staticPages = ['categories', 'favorites', 'settings', 'radio', 'about', 'privacy', 'terms', 'contact'];
+        var firstSegment = path.replace(/^\//, '').split('/')[0];
+
+        if (staticPages.indexOf(firstSegment) !== -1) {
+          var redirect = repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash;
+          l.replace(redirect);
+          return;
+        }
+
         // Article page — fetch OG data from Supabase for crawlers
         var articleMatch = path.match(/^\/article\/([a-f0-9-]+)$/);
         if (articleMatch) {
           var articleId = articleMatch[1];
           var SUPABASE_URL = 'https://zifhmbbhqgoqvqeofhtw.supabase.co';
-          var ANON_KEY = 'eyJhbG…5BZ8';
+          // Read anon key from meta tag (set at build time) or use fallback
+          var metaKey = document.querySelector('meta[name="sb-anon-key"]');
+          var ANON_KEY = metaKey ? metaKey.getAttribute('content') : '';
           var target = repoBase + '/?/article/' + articleId;
+
+          if (!ANON_KEY) {
+            // No key available, just redirect
+            l.replace(target);
+            return;
+          }
 
           // Fetch article data for OG tags
           try {
@@ -36,7 +54,6 @@
                 var title = (article.title || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
                 var desc = (article.description || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').substring(0, 200);
                 var image = article.image_url || '';
-                var articleUrl = SUPABASE_URL + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId;
 
                 // Set OG tags
                 document.title = title + ' | إيرام 24';

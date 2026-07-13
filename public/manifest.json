@@ -1,0 +1,33 @@
+{
+  "name": "إيرام 24 | نبض الحدث",
+  "short_name": "إيرام 24",
+  "description": "منصة إخبارية شاملة — أخبار اليمن والعرب والعالم لحظة بلحظة",
+  "start_url": "/iram-24/",
+  "scope": "/iram-24/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "dir": "rtl",
+  "lang": "ar",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/iram-24/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["news", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "الرئيسية",
+      "url": "/iram-24/",
+      "icons": [{ "src": "/iram-24/favicon.ico", "sizes": "48x48" }]
+    },
+    {
+      "name": "الراديو",
+      "url": "/iram-24/radio",
+      "icons": [{ "src": "/iram-24/favicon.ico", "sizes": "48x48" }]
+    }
+  ]
+}

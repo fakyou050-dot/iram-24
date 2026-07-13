@@ -14,6 +14,10 @@ import AdminDashboard from "./pages/AdminDashboard";
 import RadioPage from "./pages/RadioPage";
 import RadioAdmin from "./pages/RadioAdmin";
 import NotFound from "./pages/NotFound";
+import AboutPage from "./pages/AboutPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import ContactPage from "./pages/ContactPage";
 import { RadioProvider, useRadio } from "./contexts/RadioContext";
 import RadioSheet from "./components/radio/RadioSheet";
 import MiniPlayer from "./components/radio/MiniPlayer";
@@ -89,6 +93,10 @@ const App = () => (
             <Route path="/admin-dashboard-ERAM-SECURE" element={<AdminDashboard />} />
             <Route path="/radio" element={<RadioPage />} />
             <Route path="/radio/admin" element={<RadioAdmin />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <RadioSheet />

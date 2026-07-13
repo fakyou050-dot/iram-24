@@ -28,10 +28,10 @@ const SiteFooter = ({ language, categories, onCategorySelect }: Props) => {
         {
           title: "معلومات",
           links: [
-            { label: "من نحن", onClick: () => navigate("/settings") },
-            { label: "سياسة الخصوصية", onClick: () => navigate("/settings") },
-            { label: "شروط الاستخدام", onClick: () => navigate("/settings") },
-            { label: "اتصل بنا", onClick: () => navigate("/settings") },
+            { label: "من نحن", onClick: () => navigate("/about") },
+            { label: "سياسة الخصوصية", onClick: () => navigate("/privacy") },
+            { label: "شروط الاستخدام", onClick: () => navigate("/terms") },
+            { label: "اتصل بنا", onClick: () => navigate("/contact") },
           ],
         },
       ]
@@ -50,10 +50,10 @@ const SiteFooter = ({ language, categories, onCategorySelect }: Props) => {
         {
           title: "Info",
           links: [
-            { label: "About", onClick: () => navigate("/settings") },
-            { label: "Privacy", onClick: () => navigate("/settings") },
-            { label: "Terms", onClick: () => navigate("/settings") },
-            { label: "Contact", onClick: () => navigate("/settings") },
+            { label: "About", onClick: () => navigate("/about") },
+            { label: "Privacy", onClick: () => navigate("/privacy") },
+            { label: "Terms", onClick: () => navigate("/terms") },
+            { label: "Contact", onClick: () => navigate("/contact") },
           ],
         },
       ];
