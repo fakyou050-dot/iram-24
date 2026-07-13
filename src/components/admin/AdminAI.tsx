@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { analyzeNews, isAIConfigured } from "@/lib/ai";
 
 const AdminAI = () => {
   const [newsText, setNewsText] = useState("");
@@ -10,13 +10,14 @@ const AdminAI = () => {
 
   const handleAnalyze = async () => {
     if (!newsText.trim()) return;
+    if (!isAIConfigured()) {
+      toast.error("مفتاح Gemini غير مُعرّف. أضف VITE_GEMINI_API_KEY في .env");
+      return;
+    }
     setLoading(true);
     setResult(null);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-news-helper", {
-        body: { text: newsText.trim() },
-      });
-      if (error) throw error;
+      const data = await analyzeNews(newsText.trim());
       setResult(data);
     } catch (e: any) {
       toast.error(e.message || "حدث خطأ");
@@ -27,6 +28,19 @@ const AdminAI = () => {
   return (
     <div className="space-y-4">
       <h2 className="text-foreground font-bold">🤖 محلل الأخبار بالذكاء الاصطناعي</h2>
+
+      {!isAIConfigured() && (
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 flex items-start gap-2 text-sm">
+          <AlertTriangle size={16} className="text-yellow-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-yellow-500 font-medium">Gemini API غير مُفعّل</p>
+            <p className="text-muted-foreground text-xs mt-1">
+              أضف <code className="bg-secondary px-1 rounded">VITE_GEMINI_API_KEY</code> في ملف .env
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="bg-secondary rounded-lg p-4 space-y-3">
         <p className="text-muted-foreground text-xs">ألصق نص الخبر وسيقوم الذكاء الاصطناعي بتحليله كباحث سياسي محترف — مقارنة مع الأخبار المنشورة وتقديم تحليل عميق</p>
         <textarea
@@ -74,22 +88,6 @@ const AdminAI = () => {
                 <div className="flex flex-wrap gap-1.5">
                   {result.relatedTopics.map((t: string, i: number) => (
                     <span key={i} className="bg-secondary text-foreground text-xs px-2 py-0.5 rounded border border-border">{t}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {result.credibilityNotes && (
-              <div className="border-t border-border pt-3">
-                <p className="text-primary text-xs font-bold mb-1">⚠️ ملاحظات المصداقية:</p>
-                <p className="text-muted-foreground text-xs leading-relaxed">{result.credibilityNotes}</p>
-              </div>
-            )}
-            {result.hashtags && result.hashtags.length > 0 && (
-              <div>
-                <p className="text-primary text-xs font-bold mb-1">#️⃣ هاشتاقات:</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {result.hashtags.map((h: string, i: number) => (
-                    <span key={i} className="bg-accent text-accent-foreground text-xs px-2 py-0.5 rounded">#{h}</span>
                   ))}
                 </div>
               </div>

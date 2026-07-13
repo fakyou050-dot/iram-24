@@ -5,8 +5,9 @@ import { compressImage } from "@/lib/imageCompression";
 import {
   Sparkles, Loader2, Upload, X, Wand2, RefreshCw, PenLine,
   FileText, Hash, Eraser, Save, ArrowRight, Image as ImageIcon,
-  ExternalLink, Eye, EyeOff, Download, Video, Link
+  ExternalLink, Eye, EyeOff, Download, Video, Link, AlertTriangle
 } from "lucide-react";
+import { improveTitle, generateContent, improveContent, fullRewrite, seoOptimize, cleanText, isAIConfigured } from "@/lib/ai";
 
 interface ArticleEditPageProps {
   articleId: string;
@@ -61,20 +62,53 @@ const ArticleEditPage = ({ articleId, onBack }: ArticleEditPageProps) => {
   }, [articleId]);
 
   const callAI = async (action: string) => {
+    if (!isAIConfigured()) {
+      toast.error("مفتاح Gemini غير مُعرّف. أضف VITE_GEMINI_API_KEY في .env");
+      return;
+    }
     setAiLoading(action);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-article-tools", {
-        body: { action, articleId, title, content, language }
-      });
-      if (error) throw error;
-      if (data.error) throw new Error(data.error);
       switch (action) {
-        case "improve_title": if (data.newTitle) setTitle(data.newTitle); toast.success("تم تحسين العنوان"); break;
-        case "generate_content": if (data.newContent) setContent(data.newContent); if (data.summary) setDescription(data.summary); toast.success("تم توليد المحتوى"); break;
-        case "improve_content": if (data.newContent) setContent(data.newContent); toast.success("تم تحسين المحتوى"); break;
-        case "full_rewrite": if (data.newTitle) setTitle(data.newTitle); if (data.newContent) setContent(data.newContent); if (data.summary) setDescription(data.summary); toast.success("تمت إعادة الكتابة بالكامل"); break;
-        case "seo_optimize": if (data.keywords) setSeoKeywords(data.keywords.join(", ")); if (data.metaDescription) setDescription(data.metaDescription); toast.success("تم تحسين SEO"); break;
-        case "clean_text": if (data.cleanedContent) setContent(data.cleanedContent); toast.success("تم تنظيف النص"); break;
+        case "improve_title": {
+          const newTitle = await improveTitle(title, language);
+          setTitle(newTitle);
+          toast.success("تم تحسين العنوان");
+          break;
+        }
+        case "generate_content": {
+          const gen = await generateContent(title, language);
+          setContent(gen.content);
+          if (gen.summary) setDescription(gen.summary);
+          toast.success("تم توليد المحتوى");
+          break;
+        }
+        case "improve_content": {
+          const improved = await improveContent(content, language);
+          setContent(improved);
+          toast.success("تم تحسين المحتوى");
+          break;
+        }
+        case "full_rewrite": {
+          const rewritten = await fullRewrite(title, content, language);
+          setTitle(rewritten.title);
+          setContent(rewritten.content);
+          if (rewritten.summary) setDescription(rewritten.summary);
+          toast.success("تمت إعادة الكتابة بالكامل");
+          break;
+        }
+        case "seo_optimize": {
+          const seo = await seoOptimize(title, content, language);
+          if (seo.keywords.length) setSeoKeywords(seo.keywords.join(", "));
+          if (seo.metaDescription) setDescription(seo.metaDescription);
+          toast.success("تم تحسين SEO");
+          break;
+        }
+        case "clean_text": {
+          const cleaned = await cleanText(content, language);
+          setContent(cleaned);
+          toast.success("تم تنظيف النص");
+          break;
+        }
       }
     } catch (e: any) { toast.error(e.message || "خطأ في الذكاء الاصطناعي"); }
     setAiLoading(null);
@@ -84,10 +118,28 @@ const ArticleEditPage = ({ articleId, onBack }: ArticleEditPageProps) => {
     if (!sourceUrl || sourceUrl.startsWith("#")) { toast.error("لا يوجد رابط مصدر صالح"); return; }
     setFetchingContent(true);
     try {
-      const { data, error } = await supabase.functions.invoke("fetch-article-content", { body: { url: sourceUrl } });
-      if (error) throw error;
-      if (data?.content) { setContent(data.content); if (data.description) setDescription(data.description); toast.success("تم جلب المحتوى من المصدر"); }
-      else toast.error("لم يتم العثور على محتوى");
+      // Use CORS proxy to fetch article content
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(sourceUrl)}`;
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(15000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      // Extract text content from HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      // Try article or main content first
+      const article = doc.querySelector("article, .article-content, .post-content, .entry-content, main")
+        || doc.body;
+      // Remove scripts and styles
+      article.querySelectorAll("script, style, nav, header, footer, .ad, .advertisement").forEach((el) => el.remove());
+      const text = article.textContent?.replace(/\s+/g, " ").trim().slice(0, 5000) || "";
+      const descMeta = doc.querySelector("meta[name='description']")?.getAttribute("content") || "";
+      if (text.length > 50) {
+        setContent(text);
+        if (descMeta) setDescription(descMeta.slice(0, 300));
+        toast.success("تم جلب المحتوى من المصدر");
+      } else {
+        toast.error("لم يتم العثور على محتوى كافٍ");
+      }
     } catch { toast.error("فشل جلب المحتوى من المصدر"); }
     setFetchingContent(false);
   };
