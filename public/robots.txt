@@ -5,3 +5,6 @@ Disallow: /admin-dashboard-ERAM-SECURE/
 Disallow: /radio/admin
 
 Sitemap: https://fakyou050-dot.github.io/iram-24/sitemap.xml
+
+# RSS Feed
+# https://fakyou050-dot.github.io/iram-24/rss.xml
