@@ -36,8 +36,20 @@ jobs:
           VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8"
           VITE_SUPABASE_URL: "https://zifhmbbhqgoqvqeofhtw.supabase.co"
 
-      - name: Verify SPA fallback exists
-        run: test -f dist/404.html && echo "404.html exists from public/" || cp dist/index.html dist/404.html
+      - name: Copy SPA assets to root
+        run: |
+          # Vite outputs to dist/iram-24/ when base=/iram-24/
+          # GitHub Pages needs 404.html at root (dist/)
+          if [ -d dist/iram-24 ]; then
+            cp dist/iram-24/404.html dist/404.html 2>/dev/null || true
+            cp dist/iram-24/index.html dist/index.html 2>/dev/null || true
+            cp -r dist/iram-24/* dist/ 2>/dev/null || true
+            echo "Copied SPA assets from dist/iram-24/ to dist/"
+          fi
+          # Ensure 404.html exists
+          test -f dist/404.html && echo "404.html exists" || cp dist/index.html dist/404.html
+          echo "Final dist/ contents:"
+          ls -la dist/ | head -20
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
