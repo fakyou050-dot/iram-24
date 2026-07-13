@@ -1,11 +1,20 @@
 /**
- * Auto-fetch RSS news — client-side fallback when Edge Functions are not deployed.
- * Runs in the background, fetches RSS via CORS proxy, inserts into Supabase.
+ * Auto-fetch RSS news — Client-side fallback
+ *
+ * Priority order:
+ * 1. Edge Function (fetch-news) — server-side, most reliable
+ * 2. Client-side fetch via CORS proxy — fallback when Edge Function is down
+ *
+ * Reads sources from news_sources table + hardcoded fallback feeds.
  */
 
 import { supabase } from "@/integrations/supabase/client";
 
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+const CORS_PROXIES = [
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?",
+  "https://api.codetabs.com/v1/proxy?quest=",
+];
 
 interface RssArticle {
   title: string;
@@ -21,30 +30,10 @@ interface RssArticle {
   is_breaking: boolean;
   show_source: boolean;
   author_name: string;
+  source_id?: string;
 }
 
-// Classify article into category
-function classifyCategory(title: string, desc: string, lang: string): string {
-  const t = (title + " " + desc).toLowerCase();
-
-  if (lang === "AR") {
-    if (/كرة|مباراة|دوري|بطولة|كأس|منتخب|نادي|هدف|لاعب|مدرب/.test(t)) return "رياضة";
-    if (/اقتصاد|بورصة|أسهم|نفط|دولار|ذهب|بنك|استثمار|تجارة|سوق/.test(t)) return "اقتصاد";
-    if (/تكنولوج|ذكاء|روبوت|هاتف|جوال|تطبيق|إنترنت|ذكاء اصطناعي/.test(t)) return "تكنولوجيا";
-    if (/صحة|مرض|علاج|دواء|فيروس|لقاح|مستشفى|طبي/.test(t)) return "صحة";
-    if (/انتخاب|برلمان|حكومة|رئيس|وزير|قمة|دبلوماس|عسكري|حرب|سلام/.test(t)) return "سياسة";
-    if (/يمن|صنعاء|عدن|مأرب|تعز|حضرموت/.test(t)) return "محلي";
-    if (/مصر|سعود|إمارات|عراق|سوري|فلسطين|أردن|لبنان|كويت|قطر/.test(t)) return "عربي";
-    return "عامة";
-  } else {
-    if (/football|soccer|basketball|tennis|match|goal|league|cup|championship/.test(t)) return "Sports";
-    if (/economy|market|stock|oil|gold|trade|bank|investment/.test(t)) return "Economy";
-    if (/tech|ai|software|app|internet|digital|robot|smartphone/.test(t)) return "Technology";
-    if (/health|disease|vaccine|treatment|hospital|medical/.test(t)) return "Health";
-    if (/politic|government|president|election|parliament|war|peace/.test(t)) return "Politics";
-    return "General";
-  }
-}
+// ─── Utility Functions ──────────────────────────────────────────────
 
 function decodeEntities(text: string): string {
   if (!text) return "";
@@ -79,7 +68,7 @@ function hashString(str: string): string {
 function extractImage(block: string): string | null {
   const patterns = [
     /<media:(?:content|thumbnail)[^>]+url=["']([^"']+)["']/i,
-    /<enclosure[^>]+url=["']([^"']+\.(?:jpg|jpeg|png|webp))[^"']*["']/i,
+    /<enclosure[^>]+url=["']([^"']+\.(?:jpg|jpeg|png|webp|gif))[^"']*["']/i,
     /<img[^>]+src=["']([^"']+)["']/i,
   ];
   for (const p of patterns) {
@@ -98,6 +87,32 @@ function getTag(block: string, tag: string): string {
   const m = block.match(re);
   return (m?.[1] || m?.[2] || "").trim();
 }
+
+// ─── Smart Category Classification ──────────────────────────────────
+
+function classifyCategory(title: string, desc: string, lang: string): string {
+  const t = (title + " " + desc).toLowerCase();
+
+  if (lang === "AR") {
+    if (/كرة|مباراة|دوري|بطولة|كأس|منتخب|نادي|هدف|لاعب|مدرب/.test(t)) return "رياضة";
+    if (/اقتصاد|بورصة|أسهم|نفط|دولار|ذهب|بنك|استثمار|تجارة|سوق/.test(t)) return "اقتصاد";
+    if (/تكنولوج|ذكاء|روبوت|هاتف|جوال|تطبيق|إنترنت|ذكاء اصطناعي/.test(t)) return "تكنولوجيا";
+    if (/صحة|مرض|علاج|دواء|فيروس|لقاح|مستشفى|طبي/.test(t)) return "صحة";
+    if (/انتخاب|برلمان|حكومة|رئيس|وزير|قمة|دبلوماس|عسكري|حرب|سلام/.test(t)) return "سياسة";
+    if (/يمن|صنعاء|عدن|مأرب|تعز|حضرموت/.test(t)) return "محلي";
+    if (/مصر|سعود|إمارات|عراق|سوري|فلسطين|أردن|لبنان|كويت|قطر/.test(t)) return "عربي";
+    return "عامة";
+  } else {
+    if (/football|soccer|basketball|tennis|match|goal|league|cup|championship/.test(t)) return "Sports";
+    if (/economy|market|stock|oil|gold|trade|bank|investment/.test(t)) return "Economy";
+    if (/tech|ai|software|app|internet|digital|robot|smartphone/.test(t)) return "Technology";
+    if (/health|disease|vaccine|treatment|hospital|medical/.test(t)) return "Health";
+    if (/politic|government|president|election|parliament|war|peace/.test(t)) return "Politics";
+    return "General";
+  }
+}
+
+// ─── RSS Parser ─────────────────────────────────────────────────────
 
 function parseRss(xml: string, sourceName: string, language: string): RssArticle[] {
   const items = Array.from(
@@ -144,38 +159,119 @@ function parseRss(xml: string, sourceName: string, language: string): RssArticle
     .filter(Boolean) as RssArticle[];
 }
 
-const FEEDS: Array<{ name: string; url: string; lang: string }> = [
-  // Arabic news
-  { name: "BBC Arabic", url: "https://feeds.bbci.co.uk/arabic/rss.xml", lang: "AR" },
-  { name: "France24 AR", url: "https://www.france24.com/ar/rss", lang: "AR" },
-  { name: "RT Arabic", url: "https://arabic.rt.com/rss", lang: "AR" },
-  { name: "Sky News Arabia", url: "https://www.skynewsarabia.com/rss", lang: "AR" },
-  { name: "Al Arabiya", url: "https://www.alarabiya.net/feed/rss2", lang: "AR" },
-  { name: "RT Sports", url: "https://arabic.rt.com/sport/rss", lang: "AR" },
-  // English news
-  { name: "BBC News", url: "https://feeds.bbci.co.uk/news/world/rss.xml", lang: "EN" },
-  { name: "The Guardian", url: "https://www.theguardian.com/world/rss", lang: "EN" },
-];
+// ─── Fetch with CORS proxy rotation ─────────────────────────────────
 
-async function fetchOneFeed(feed: { name: string; url: string; lang: string }): Promise<RssArticle[]> {
+async function fetchWithProxy(url: string): Promise<string | null> {
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 12000);
+      const res = await fetch(proxyUrl, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (res.ok) {
+        const text = await res.text();
+        if (text && text.length > 50) return text;
+      }
+    } catch {
+      // Try next proxy
+    }
+  }
+  return null;
+}
+
+// ─── Fetch from DB sources ──────────────────────────────────────────
+
+async function fetchFromDBSources(): Promise<RssArticle[]> {
   try {
-    const proxyUrl = `${CORS_PROXY}${encodeURIComponent(feed.url)}`;
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(proxyUrl, { signal: ctrl.signal });
-    clearTimeout(timer);
-    if (!res.ok) return [];
-    const xml = await res.text();
-    return parseRss(xml, feed.name, feed.lang);
+    const { data: sources } = await supabase
+      .from("news_sources")
+      .select("id, name, url, feed_url, language, category")
+      .eq("is_active", true)
+      .limit(20);
+
+    if (!sources || sources.length === 0) return [];
+
+    const allArticles: RssArticle[] = [];
+    const seen = new Set<string>();
+
+    // Process in batches of 4
+    for (let i = 0; i < sources.length; i += 4) {
+      const batch = sources.slice(i, i + 4);
+      const results = await Promise.allSettled(
+        batch.map(async (source) => {
+          const feedUrl = source.feed_url || source.url;
+          if (!feedUrl) return [];
+
+          const xml = await fetchWithProxy(feedUrl);
+          if (!xml) return [];
+
+          const articles = parseRss(xml, source.name, source.language);
+          // Tag with source_id
+          return articles.map((a) => ({ ...a, source_id: source.id }));
+        })
+      );
+
+      for (const r of results) {
+        if (r.status === "fulfilled") {
+          for (const a of r.value) {
+            if (!seen.has(a.hash)) {
+              seen.add(a.hash);
+              allArticles.push(a);
+            }
+          }
+        }
+      }
+    }
+
+    return allArticles;
   } catch {
     return [];
   }
 }
 
-/**
- * Fetch all RSS feeds and insert new articles into Supabase.
- * Returns the number of new articles inserted.
- */
+// ─── Hardcoded fallback feeds ───────────────────────────────────────
+
+const FALLBACK_FEEDS: Array<{ name: string; url: string; lang: string }> = [
+  { name: "BBC Arabic", url: "https://feeds.bbci.co.uk/arabic/rss.xml", lang: "AR" },
+  { name: "France24 AR", url: "https://www.france24.com/ar/rss", lang: "AR" },
+  { name: "RT Arabic", url: "https://arabic.rt.com/rss", lang: "AR" },
+  { name: "Al Arabiya", url: "https://www.alarabiya.net/feed/rss2", lang: "AR" },
+  { name: "Sky News Arabia", url: "https://www.skynewsarabia.com/rss", lang: "AR" },
+  { name: "BBC News", url: "https://feeds.bbci.co.uk/news/world/rss.xml", lang: "EN" },
+];
+
+async function fetchFromFallbackFeeds(): Promise<RssArticle[]> {
+  const allArticles: RssArticle[] = [];
+  const seen = new Set<string>();
+
+  for (let i = 0; i < FALLBACK_FEEDS.length; i += 3) {
+    const batch = FALLBACK_FEEDS.slice(i, i + 3);
+    const results = await Promise.allSettled(
+      batch.map(async (feed) => {
+        const xml = await fetchWithProxy(feed.url);
+        if (!xml) return [];
+        return parseRss(xml, feed.name, feed.lang);
+      })
+    );
+
+    for (const r of results) {
+      if (r.status === "fulfilled") {
+        for (const a of r.value) {
+          if (!seen.has(a.hash)) {
+            seen.add(a.hash);
+            allArticles.push(a);
+          }
+        }
+      }
+    }
+  }
+
+  return allArticles;
+}
+
+// ─── Main auto-fetch function ───────────────────────────────────────
+
 export async function autoFetchNews(): Promise<number> {
   // Check if enough time has passed since last fetch
   const { data: settings } = await supabase
@@ -192,28 +288,32 @@ export async function autoFetchNews(): Promise<number> {
     }
   }
 
-  // Fetch all feeds in parallel
-  const results = await Promise.allSettled(FEEDS.map(fetchOneFeed));
-  const allArticles: RssArticle[] = [];
-  const seen = new Set<string>();
-
-  for (const r of results) {
-    if (r.status === "fulfilled") {
-      for (const a of r.value) {
-        if (!seen.has(a.hash)) {
-          seen.add(a.hash);
-          allArticles.push(a);
-        }
-      }
+  // Try Edge Function first (most reliable)
+  try {
+    const { data, error } = await supabase.functions.invoke("fetch-news");
+    if (!error && data?.count > 0) {
+      console.log(`[Eram24] Edge Function fetched ${data.count} articles`);
+      return data.count;
     }
+  } catch {
+    // Edge Function not available, fall through to client-side
   }
 
-  if (allArticles.length === 0) return 0;
+  // Fallback: client-side fetch
+  console.log("[Eram24] Edge Function unavailable, using client-side fallback");
+
+  // Try DB sources first, then fallback feeds
+  let articles = await fetchFromDBSources();
+  if (articles.length === 0) {
+    articles = await fetchFromFallbackFeeds();
+  }
+
+  if (articles.length === 0) return 0;
 
   // Insert into database (upsert by hash)
   const { data, error } = await supabase
     .from("articles")
-    .upsert(allArticles, { onConflict: "hash", ignoreDuplicates: true })
+    .upsert(articles, { onConflict: "hash", ignoreDuplicates: true })
     .select("id");
 
   const inserted = data?.length || 0;
@@ -230,10 +330,8 @@ export async function autoFetchNews(): Promise<number> {
   return inserted;
 }
 
-/**
- * Start auto-fetch interval. Returns a cleanup function.
- * Call this once when the app loads.
- */
+// ─── Start auto-fetch interval ──────────────────────────────────────
+
 export function startAutoFetch(intervalMs = 30 * 60 * 1000): () => void {
   let active = true;
 

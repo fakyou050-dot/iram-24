@@ -1,80 +1,79 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// supabase/functions/setup-admin/index.ts
+// Creates or updates the admin user and ensures admin role exists
+// Deploy: supabase functions deploy setup-admin
+
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      },
+    });
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      auth: { autoRefreshToken: false, persistSession: false }
-    });
-
     const { email, password } = await req.json();
+
     if (!email || !password) {
-      return new Response(JSON.stringify({ error: "Email and password required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Email and password required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    // Check if user already exists
-    const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const existingUser = existingUsers?.users?.find(u => u.email === email);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    // Try to find existing user
+    const { data: users } = await supabase.auth.admin.listUsers();
+    const existingUser = users?.users?.find((u) => u.email === email);
+
+    let userId: string;
 
     if (existingUser) {
-      // User exists — update password
-      const { error: updateError } = await supabase.auth.admin.updateUserById(
-        existingUser.id,
-        { password: password }
-      );
-
-      if (updateError) {
-        return new Response(JSON.stringify({ error: "Failed to update password: " + updateError.message }), {
-          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      // Ensure admin role exists
-      await supabase.from("user_roles").upsert(
-        { user_id: existingUser.id, role: "admin" },
-        { onConflict: "user_id,role" }
-      );
-
-      return new Response(JSON.stringify({ success: true, message: "Password updated and admin role confirmed" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      // Update password
+      const { error } = await supabase.auth.admin.updateUserById(existingUser.id, {
+        password,
       });
+      if (error) throw error;
+      userId = existingUser.id;
+    } else {
+      // Create new user
+      const { data, error } = await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+      if (error) throw error;
+      userId = data.user.id;
     }
 
-    // User doesn't exist — create new user
-    const { data: userData, error: userError } = await supabase.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    });
+    // Ensure admin role exists
+    const { error: roleError } = await supabase
+      .from("user_roles")
+      .upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });
 
-    if (userError) {
-      return new Response(JSON.stringify({ error: userError.message }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (roleError) {
+      console.warn("Role upsert warning:", roleError);
     }
 
-    // Assign admin role
-    await supabase.from("user_roles").insert({ user_id: userData.user.id, role: "admin" });
-
-    return new Response(JSON.stringify({ success: true, message: "Admin created" }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ success: true, userId }),
+      { headers: { "Content-Type": "application/json" } }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Internal error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+    return new Response(
+      JSON.stringify({ error: errMsg }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 });
