@@ -1,58 +1,54 @@
 /**
- * Free AI module using Google Gemini API (no Edge Functions needed).
- * Uses the free tier: https://ai.google.dev/
- * 
- * To activate:
- * 1. Go to https://aistudio.google.com/apikey
- * 2. Create a free API key
- * 3. Add it to .env as VITE_GEMINI_API_KEY
+ * Free AI module — uses Pollinations.ai (no API key needed).
+ * Optionally uses Google Gemini if VITE_GEMINI_API_KEY is set.
  */
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
-interface AIResponse {
-  text: string;
-  error?: string;
-}
-
-async function callGemini(prompt: string): Promise<AIResponse> {
-  if (!GEMINI_API_KEY) {
-    return { text: "", error: "مفتاح Gemini غير مُعرّف. أضف VITE_GEMINI_API_KEY في .env" };
+async function askAI(prompt: string): Promise<string> {
+  // Try Gemini first if key is available
+  if (GEMINI_KEY && GEMINI_KEY.startsWith("AIza")) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
+          }),
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text;
+      }
+    } catch {}
   }
 
+  // Fallback: Pollinations.ai (free, no key needed)
   try {
-    const res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2048,
-          topP: 0.9,
-        },
-      }),
+    const encoded = encodeURIComponent(prompt);
+    const res = await fetch(`https://text.pollinations.ai/${encoded}`, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+      signal: AbortSignal.timeout(60000),
     });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      return { text: "", error: err?.error?.message || `API Error ${res.status}` };
+    if (res.ok) {
+      const text = await res.text();
+      if (text.trim()) return text.trim();
     }
+  } catch {}
 
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return { text };
-  } catch (e: any) {
-    return { text: "", error: e.message || "Network error" };
-  }
+  throw new Error("فشل الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.");
 }
 
 // ─── Public API ───────────────────────────────────────────
 
 export async function improveTitle(title: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت محرر أخبار محترف. حسّن هذا العنوان الخبري ليكون أكثر جاذبية ووضوحًا باللغة ${lang}.\n\nالعنوان الأصلي: ${title}\n\nأعد العنوان المحسّن فقط بدون أي شرح إضافي.`
   );
   return text.trim() || title;
@@ -60,7 +56,7 @@ export async function improveTitle(title: string, language: string): Promise<str
 
 export async function generateContent(title: string, language: string): Promise<{ content: string; summary: string }> {
   const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت كاتب أخبار محترف. اكتب مقالًا إخباريًا كاملًا باللغة ${lang} بناءً على هذا العنوان.\n\nالعنوان: ${title}\n\nالمطلوب:\n1. محتوى المقال (3-5 فقرات)\n2. ملخص في سطر واحد\n\nالصيغة:\n---CONTENT---\n[المحتوى]\n---SUMMARY---\n[الملخص]`
   );
 
@@ -75,7 +71,7 @@ export async function generateContent(title: string, language: string): Promise<
 
 export async function improveContent(content: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت محرر أخبار محترف. حسّن هذا المحتوى الخبري باللغة ${lang}:\n\n- اجعله أكثر وضوحًا واحترافية\n- أصلح الأخطاء الإملائية والنحوية\n- حافظ على نفس المعنى\n\n${content}\n\nأعد المحتوى المحسّن فقط.`
   );
   return text.trim() || content;
@@ -83,7 +79,7 @@ export async function improveContent(content: string, language: string): Promise
 
 export async function fullRewrite(title: string, content: string, language: string): Promise<{ title: string; content: string; summary: string }> {
   const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت كاتب أخبار محترف. أعد كتابة هذا المقال بالكامل باللغة ${lang}:\n\nالعنوان: ${title}\nالمحتوى: ${content}\n\nالمطلوب:\n1. عنوان جديد جذاب\n2. محتوى جديد احترافي\n3. ملخص\n\nالصيغة:\n---TITLE---\n[العنوان]\n---CONTENT---\n[المحتوى]\n---SUMMARY---\n[الملخص]`
   );
 
@@ -99,8 +95,7 @@ export async function fullRewrite(title: string, content: string, language: stri
 }
 
 export async function seoOptimize(title: string, content: string, language: string): Promise<{ keywords: string[]; metaDescription: string }> {
-  const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت خبير SEO. حلّل هذا المقال وأعطِ:\n1. كلمات مفتاحية (10 كلمات مفصولة بفاصلة)\n2. وصف meta للبحث (150 حرف)\n\nالعنوان: ${title}\nالمحتوى: ${content}\n\nالصيغة:\n---KEYWORDS---\n[الكلمات]\n---META---\n[الوصف]`
   );
 
@@ -115,7 +110,7 @@ export async function seoOptimize(title: string, content: string, language: stri
 
 export async function cleanText(content: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const { text } = await callGemini(
+  const text = await askAI(
     `نظّف هذا النص باللغة ${lang}:\n\n- أزل التكرار\n- أصلح الأخطاء\n- اجعله متسقًا\n\n${content}\n\nأعد النص النظيف فقط.`
   );
   return text.trim() || content;
@@ -128,7 +123,7 @@ export async function analyzeNews(newsText: string): Promise<{
   analysis: string;
   relatedTopics: string[];
 }> {
-  const { text } = await callGemini(
+  const text = await askAI(
     `أنت باحث سياسي وتحليلي محترف. حلّل هذا الخبر:
 
 ${newsText}
@@ -169,5 +164,5 @@ ${newsText}
 }
 
 export function isAIConfigured(): boolean {
-  return !!GEMINI_API_KEY;
+  return true; // Pollinations.ai always available
 }
