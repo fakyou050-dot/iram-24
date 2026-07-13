@@ -5,8 +5,8 @@
 
 const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
-async function askAI(prompt: string): Promise<string> {
-  // Try Gemini first if key is available
+async function askAI(prompt: string, retries = 2): Promise<string> {
+  // Try Gemini first if key is available and valid
   if (GEMINI_KEY && GEMINI_KEY.startsWith("AIza")) {
     try {
       const res = await fetch(
@@ -29,90 +29,103 @@ async function askAI(prompt: string): Promise<string> {
   }
 
   // Fallback: Pollinations.ai (free, no key needed)
-  try {
-    const encoded = encodeURIComponent(prompt);
-    const res = await fetch(`https://text.pollinations.ai/${encoded}`, {
-      headers: { "User-Agent": "Mozilla/5.0" },
-      signal: AbortSignal.timeout(60000),
-    });
-    if (res.ok) {
-      const text = await res.text();
-      if (text.trim()) return text.trim();
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      // Shorten prompt if too long (max ~2000 chars for URL)
+      const shortPrompt = prompt.length > 2000 ? prompt.slice(0, 2000) + "\n\nأكمل..." : prompt;
+      const encoded = encodeURIComponent(shortPrompt);
+      const res = await fetch(`https://text.pollinations.ai/${encoded}`, {
+        headers: { "User-Agent": "Mozilla/5.0" },
+        signal: AbortSignal.timeout(45000),
+      });
+
+      if (res.status === 429) {
+        // Rate limited — wait and retry
+        await new Promise((r) => setTimeout(r, 3000 * (attempt + 1)));
+        continue;
+      }
+
+      if (res.ok) {
+        const text = await res.text();
+        if (text.trim()) return text.trim();
+      }
+    } catch (e: any) {
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+        continue;
+      }
     }
-  } catch {}
+  }
 
   throw new Error("فشل الاتصال بالذكاء الاصطناعي. حاول مرة أخرى.");
+}
+
+// ─── Helper: parse structured response ───────────────────
+
+function parseSections(text: string, sections: string[]): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (let i = 0; i < sections.length; i++) {
+    const key = sections[i];
+    const nextKey = sections[i + 1];
+    const regex = nextKey
+      ? new RegExp(`---${key}---\\s*([\\s\\S]*?)(?=---${nextKey}---|$)`)
+      : new RegExp(`---${key}---\\s*([\\s\\S]*?)$`);
+    const match = text.match(regex);
+    result[key] = match?.[1]?.trim() || "";
+  }
+  return result;
 }
 
 // ─── Public API ───────────────────────────────────────────
 
 export async function improveTitle(title: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const text = await askAI(
-    `أنت محرر أخبار محترف. حسّن هذا العنوان الخبري ليكون أكثر جاذبية ووضوحًا باللغة ${lang}.\n\nالعنوان الأصلي: ${title}\n\nأعد العنوان المحسّن فقط بدون أي شرح إضافي.`
-  );
-  return text.trim() || title;
+  const text = await askAI(`حرّر هذا العنوان بال${lang} ليكون أقصر وأجذب:\n"${title}"\nالعنوان فقط:`);
+  return text.replace(/^["']|["']$/g, "").trim() || title;
 }
 
 export async function generateContent(title: string, language: string): Promise<{ content: string; summary: string }> {
   const lang = language === "AR" ? "العربية" : "English";
   const text = await askAI(
-    `أنت كاتب أخبار محترف. اكتب مقالًا إخباريًا كاملًا باللغة ${lang} بناءً على هذا العنوان.\n\nالعنوان: ${title}\n\nالمطلوب:\n1. محتوى المقال (3-5 فقرات)\n2. ملخص في سطر واحد\n\nالصيغة:\n---CONTENT---\n[المحتوى]\n---SUMMARY---\n[الملخص]`
+    `اكتب مقال خبري بال${lang}:\n"${title}"\n---CONTENT---\n3 فقرات\n---SUMMARY---\nملخص سطر واحد`
   );
-
-  const contentMatch = text.match(/---CONTENT---\s*([\s\S]*?)(?=---SUMMARY---|$)/);
-  const summaryMatch = text.match(/---SUMMARY---\s*([\s\S]*?)$/);
-
-  return {
-    content: contentMatch?.[1]?.trim() || text.trim(),
-    summary: summaryMatch?.[1]?.trim() || "",
-  };
+  const parsed = parseSections(text, ["CONTENT", "SUMMARY"]);
+  return { content: parsed.CONTENT || text.trim(), summary: parsed.SUMMARY || "" };
 }
 
 export async function improveContent(content: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const text = await askAI(
-    `أنت محرر أخبار محترف. حسّن هذا المحتوى الخبري باللغة ${lang}:\n\n- اجعله أكثر وضوحًا واحترافية\n- أصلح الأخطاء الإملائية والنحوية\n- حافظ على نفس المعنى\n\n${content}\n\nأعد المحتوى المحسّن فقط.`
-  );
+  const shortContent = content.slice(0, 1500);
+  const text = await askAI(`حسّن هذا النص بال${lang} - أصلح الأخطاء واجعله احترافي:\n${shortContent}\nالنص المحسّن:`);
   return text.trim() || content;
 }
 
 export async function fullRewrite(title: string, content: string, language: string): Promise<{ title: string; content: string; summary: string }> {
   const lang = language === "AR" ? "العربية" : "English";
+  const shortContent = content.slice(0, 1000);
   const text = await askAI(
-    `أنت كاتب أخبار محترف. أعد كتابة هذا المقال بالكامل باللغة ${lang}:\n\nالعنوان: ${title}\nالمحتوى: ${content}\n\nالمطلوب:\n1. عنوان جديد جذاب\n2. محتوى جديد احترافي\n3. ملخص\n\nالصيغة:\n---TITLE---\n[العنوان]\n---CONTENT---\n[المحتوى]\n---SUMMARY---\n[الملخص]`
+    `أعد كتابة بال${lang}:\nعنوان: "${title}"\nمحتوى: ${shortContent}\n---TITLE---\nعنوان جديد\n---CONTENT---\nمحتوى جديد\n---SUMMARY---\nملخص`
   );
-
-  const titleMatch = text.match(/---TITLE---\s*([\s\S]*?)(?=---CONTENT---|$)/);
-  const contentMatch = text.match(/---CONTENT---\s*([\s\S]*?)(?=---SUMMARY---|$)/);
-  const summaryMatch = text.match(/---SUMMARY---\s*([\s\S]*?)$/);
-
-  return {
-    title: titleMatch?.[1]?.trim() || title,
-    content: contentMatch?.[1]?.trim() || content,
-    summary: summaryMatch?.[1]?.trim() || "",
-  };
+  const parsed = parseSections(text, ["TITLE", "CONTENT", "SUMMARY"]);
+  return { title: parsed.TITLE || title, content: parsed.CONTENT || content, summary: parsed.SUMMARY || "" };
 }
 
 export async function seoOptimize(title: string, content: string, language: string): Promise<{ keywords: string[]; metaDescription: string }> {
+  const shortContent = content.slice(0, 800);
   const text = await askAI(
-    `أنت خبير SEO. حلّل هذا المقال وأعطِ:\n1. كلمات مفتاحية (10 كلمات مفصولة بفاصلة)\n2. وصف meta للبحث (150 حرف)\n\nالعنوان: ${title}\nالمحتوى: ${content}\n\nالصيغة:\n---KEYWORDS---\n[الكلمات]\n---META---\n[الوصف]`
+    `SEO للعنوان: "${title}"\n---KEYWORDS---\n10 كلمات مفتاحية مفصولة بفاصلة\n---META---\nوصف 150 حرف`
   );
-
-  const keywordsMatch = text.match(/---KEYWORDS---\s*([\s\S]*?)(?=---META---|$)/);
-  const metaMatch = text.match(/---META---\s*([\s\S]*?)$/);
-
+  const parsed = parseSections(text, ["KEYWORDS", "META"]);
   return {
-    keywords: (keywordsMatch?.[1]?.trim() || "").split(",").map((k) => k.trim()).filter(Boolean),
-    metaDescription: metaMatch?.[1]?.trim() || "",
+    keywords: (parsed.KEYWORDS || "").split(",").map((k) => k.trim()).filter(Boolean),
+    metaDescription: parsed.META || "",
   };
 }
 
 export async function cleanText(content: string, language: string): Promise<string> {
   const lang = language === "AR" ? "العربية" : "English";
-  const text = await askAI(
-    `نظّف هذا النص باللغة ${lang}:\n\n- أزل التكرار\n- أصلح الأخطاء\n- اجعله متسقًا\n\n${content}\n\nأعد النص النظيف فقط.`
-  );
+  const shortContent = content.slice(0, 1500);
+  const text = await askAI(`نظّف هذا النص بال${lang} - أزل التكرار والأخطاء:\n${shortContent}\nالنص النظيف:`);
   return text.trim() || content;
 }
 
@@ -123,43 +136,17 @@ export async function analyzeNews(newsText: string): Promise<{
   analysis: string;
   relatedTopics: string[];
 }> {
+  const shortText = newsText.slice(0, 1200);
   const text = await askAI(
-    `أنت باحث سياسي وتحليلي محترف. حلّل هذا الخبر:
-
-${newsText}
-
-المطلوب:
-1. عنوان أفضل
-2. تصنيف (سياسة/اقتصاد/رياضة/تكنولوجيا/صحة/عربي/دولي/محلي)
-3. ملخص في سطرين
-4. تحليل عميق (3 فقرات)
-5. مواضيع ذات صلة (5 مواضيع)
-
-الصيغة:
----TITLE---
-[العنوان]
----CATEGORY---
-[التصنيف]
----SUMMARY---
-[الملخص]
----ANALYSIS---
-[التحليل]
----TOPICS---
-[الموضوع1, الموضوع2, ...]`
+    `حلّل هذا الخبر:\n${shortText}\n---TITLE---\nعنوان أفضل\n---CATEGORY---\nتصنيف واحد\n---SUMMARY---\nملخص\n---ANALYSIS---\nتحليل\n---TOPICS---\nمواضيع متعلقة`
   );
-
-  const titleMatch = text.match(/---TITLE---\s*([\s\S]*?)(?=---CATEGORY---|$)/);
-  const catMatch = text.match(/---CATEGORY---\s*([\s\S]*?)(?=---SUMMARY---|$)/);
-  const sumMatch = text.match(/---SUMMARY---\s*([\s\S]*?)(?=---ANALYSIS---|$)/);
-  const anaMatch = text.match(/---ANALYSIS---\s*([\s\S]*?)(?=---TOPICS---|$)/);
-  const topicsMatch = text.match(/---TOPICS---\s*([\s\S]*?)$/);
-
+  const parsed = parseSections(text, ["TITLE", "CATEGORY", "SUMMARY", "ANALYSIS", "TOPICS"]);
   return {
-    betterTitle: titleMatch?.[1]?.trim() || "",
-    category: catMatch?.[1]?.trim() || "",
-    summary: sumMatch?.[1]?.trim() || "",
-    analysis: anaMatch?.[1]?.trim() || text.trim(),
-    relatedTopics: (topicsMatch?.[1]?.trim() || "").split(",").map((t) => t.trim()).filter(Boolean),
+    betterTitle: parsed.TITLE || "",
+    category: parsed.CATEGORY || "",
+    summary: parsed.SUMMARY || "",
+    analysis: parsed.ANALYSIS || text.trim(),
+    relatedTopics: (parsed.TOPICS || "").split(",").map((t) => t.trim()).filter(Boolean),
   };
 }
 

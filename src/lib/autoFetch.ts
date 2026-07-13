@@ -145,10 +145,14 @@ function parseRss(xml: string, sourceName: string, language: string): RssArticle
 }
 
 const FEEDS: Array<{ name: string; url: string; lang: string }> = [
+  // Arabic news
   { name: "BBC Arabic", url: "https://feeds.bbci.co.uk/arabic/rss.xml", lang: "AR" },
   { name: "France24 AR", url: "https://www.france24.com/ar/rss", lang: "AR" },
   { name: "RT Arabic", url: "https://arabic.rt.com/rss", lang: "AR" },
   { name: "Sky News Arabia", url: "https://www.skynewsarabia.com/rss", lang: "AR" },
+  { name: "Al Arabiya", url: "https://www.alarabiya.net/feed/rss2", lang: "AR" },
+  { name: "RT Sports", url: "https://arabic.rt.com/sport/rss", lang: "AR" },
+  // English news
   { name: "BBC News", url: "https://feeds.bbci.co.uk/news/world/rss.xml", lang: "EN" },
   { name: "The Guardian", url: "https://www.theguardian.com/world/rss", lang: "EN" },
 ];
