@@ -13,32 +13,123 @@
         var repoBase = '/iram-24';
         var path = l.pathname.startsWith(repoBase) ? l.pathname.slice(repoBase.length) : l.pathname;
 
-        // Static pages that can be redirected without fetching data
+        // Detect social media crawlers (they DON'T execute JS or have limited execution)
+        var ua = navigator.userAgent || '';
+        var isCrawler = /facebookexternalhit|Facebot|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|Applebot|Googlebot|bingbot|Pinterest|SkypeUriPreview|Embedly/i.test(ua);
+
+        // Static pages — redirect immediately (no data needed)
         var staticPages = ['categories', 'favorites', 'settings', 'radio', 'about', 'privacy', 'terms', 'contact'];
         var firstSegment = path.replace(/^\//, '').split('/')[0];
 
         if (staticPages.indexOf(firstSegment) !== -1) {
-          var redirect = repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash;
-          l.replace(redirect);
+          l.replace(repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash);
           return;
         }
 
-        // Article page — redirect to Edge Function for proper OG tags
-        // The Edge Function serves full HTML with OG tags for crawlers,
-        // and meta-refresh redirects humans to the SPA
+        // Article page
         var articleMatch = path.match(/^\/article\/([a-f0-9-]+)$/);
         if (articleMatch) {
           var articleId = articleMatch[1];
-          var OG_FUNCTION_URL = 'https://zifhmbbhqgoqvqeofhtw.supabase.co/functions/v1/og-article?id=' + articleId;
-          l.replace(OG_FUNCTION_URL);
+          var SUPABASE_URL = 'https://zifhmbbhqgoqvqeofhtw.supabase.co';
+          var metaKey = document.querySelector('meta[name="sb-anon-key"]');
+          var ANON_KEY = *** ? metaKey.getAttribute('content') : '';
+          var target = repoBase + '/?/article/' + articleId;
+
+          if (!ANON_KEY) {
+            l.replace(target);
+            return;
+          }
+
+          // Fetch article data for OG tags (synchronous — works for crawlers)
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', SUPABASE_URL + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId, false);
+            xhr.setRequestHeader('apikey', ANON_KEY);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + ANON_KEY);
+            xhr.send();
+
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              if (data && data.length > 0) {
+                var article = data[0];
+                var title = (article.title || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+                var desc = (article.description || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').substring(0, 200);
+                var image = article.image_url || '';
+
+                // Set OG tags in DOM
+                document.title = title + ' | إيرام 24';
+
+                var setMeta = function(prop, content) {
+                  var el = document.createElement('meta');
+                  el.setAttribute('property', prop);
+                  el.setAttribute('content', content);
+                  document.head.appendChild(el);
+                };
+
+                var setName = function(name, content) {
+                  var el = document.createElement('meta');
+                  el.setAttribute('name', name);
+                  el.setAttribute('content', content);
+                  document.head.appendChild(el);
+                };
+
+                setMeta('og:title', title);
+                setMeta('og:description', desc);
+                setMeta('og:url', 'https://fakyou050-dot.github.io' + repoBase + '/article/' + articleId);
+                setMeta('og:type', 'article');
+                setName('description', desc);
+                setName('twitter:title', title);
+                setName('twitter:description', desc);
+
+                if (image) {
+                  setMeta('og:image', image);
+                  setMeta('og:image:width', '1200');
+                  setMeta('og:image:height', '630');
+                  setMeta('og:image:alt', title);
+                  setName('twitter:image', image);
+                  setName('twitter:card', 'summary_large_image');
+                } else {
+                  setName('twitter:card', 'summary');
+                }
+
+                // JSON-LD for Google
+                var ld = document.createElement('script');
+                ld.type = 'application/ld+json';
+                ld.text = JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "NewsArticle",
+                  "headline": article.title,
+                  "description": article.description || '',
+                  "image": image ? [image] : undefined,
+                  "datePublished": new Date().toISOString(),
+                  "publisher": {"@type": "Organization", "name": "إيرام 24"}
+                });
+                document.head.appendChild(ld);
+
+                // For CRAWLERS: stay on this page (they read the HTML with OG tags)
+                // For HUMANS: redirect to SPA
+                if (!isCrawler) {
+                  l.replace(target);
+                }
+                return;
+              }
+            }
+          } catch(e) {}
+
+          // Fallback
+          l.replace(target);
           return;
         }
 
         // Default SPA redirect
-        var redirect = repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash;
-        l.replace(redirect);
+        l.replace(repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash);
       })();
     </script>
   </head>
-  <body></body>
+  <body>
+    <!-- Visible content for crawlers that don't execute JS -->
+    <h1>إيرام 24</h1>
+    <p>جاري تحميل المقال...</p>
+    <p><a href="/">العودة للرئيسية</a></p>
+  </body>
 </html>
