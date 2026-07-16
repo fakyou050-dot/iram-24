@@ -3,14 +3,9 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-const DEFAULT_BASE_PATH = "/";
-
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  const base = env.VITE_APP_BASE_PATH || DEFAULT_BASE_PATH;
-
   return {
-    base,
+    base: "/",
     server: {
       host: "::",
       port: 8080,
