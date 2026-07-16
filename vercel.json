@@ -4,6 +4,9 @@
   "installCommand": "npm ci --no-audit --no-fund",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/iram-24/:path*", "destination": "/:path*" }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
@@ -35,6 +38,10 @@
   "routes": [
     {
       "handle": "filesystem"
+    },
+    {
+      "src": "/iram-24/(.*)",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
