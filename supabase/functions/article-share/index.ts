@@ -6,7 +6,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-const SITE_ORIGIN = "https://fakyou050-dot.github.io/iram-24";
+const SITE_ORIGIN = Deno.env.get("SITE_URL") || "https://iram-24.vercel.app";
 const SITE_NAME = "إيرام 24";
 
 const escape = (s: string) =>

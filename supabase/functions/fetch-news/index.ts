@@ -314,7 +314,7 @@ async function fetchFromSource(source: any): Promise<ParsedArticle[]> {
     const response = await fetch(feedUrl, {
       signal: controller.signal,
       headers: {
-        "User-Agent": "Eram24NewsBot/1.0 (+https://fakyou050-dot.github.io/iram-24/)",
+        "User-Agent": "Eram24NewsBot/1.0 (+https://iram-24.vercel.app/)",
         "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
       },
     });

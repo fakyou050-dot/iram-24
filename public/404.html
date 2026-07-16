@@ -10,63 +10,62 @@
     <script>
       (function () {
         var l = window.location;
-        var repoBase = '/iram-24';
-        var path = l.pathname.startsWith(repoBase) ? l.pathname.slice(repoBase.length) : l.pathname;
-
-        // Detect social media crawlers (they DON'T execute JS or have limited execution)
+        var repoBase = l.pathname.startsWith('/iram-24/') ? '/iram-24' : '';
+        var path = repoBase && l.pathname.startsWith(repoBase)
+          ? l.pathname.slice(repoBase.length)
+          : l.pathname;
+        var siteOrigin = l.origin + repoBase;
+        var supabaseUrl = 'https://zifhmbbhqgoqvqeofhtw.supabase.co';
+        var anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8';
         var ua = navigator.userAgent || '';
         var isCrawler = /facebookexternalhit|Facebot|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|Applebot|Googlebot|bingbot|Pinterest|SkypeUriPreview|Embedly/i.test(ua);
-
-        // Static pages — redirect immediately (no data needed)
         var staticPages = ['categories', 'favorites', 'settings', 'radio', 'about', 'privacy', 'terms', 'contact'];
         var firstSegment = path.replace(/^\//, '').split('/')[0];
 
+        function withBase(nextPath) {
+          return (repoBase || '') + nextPath;
+        }
+
+        function redirectToSpa(nextPath) {
+          var clean = nextPath.replace(/^\//, '');
+          l.replace(withBase('/?/' + clean) + (l.search ? '&' + l.search.slice(1) : '') + l.hash);
+        }
+
         if (staticPages.indexOf(firstSegment) !== -1) {
-          l.replace(repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash);
+          redirectToSpa(path);
           return;
         }
 
-        // Article page
-        var articleMatch = path.match(/^\/article\/([a-f0-9-]+)$/);
+        var articleMatch = path.match(/^\/article\/([a-f0-9-]+)$/i);
         if (articleMatch) {
           var articleId = articleMatch[1];
-          var SUPABASE_URL = 'https://zifhmbbhqgoqvqeofhtw.supabase.co';
-          var metaKey = document.querySelector('meta[name="sb-anon-key"]');
-          var ANON_KEY = *** ? metaKey.getAttribute('content') : '';
-          var target = repoBase + '/?/article/' + articleId;
+          var target = withBase('/?/article/' + articleId);
 
-          if (!ANON_KEY) {
-            l.replace(target);
-            return;
-          }
-
-          // Fetch article data for OG tags (synchronous — works for crawlers)
           try {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', SUPABASE_URL + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId, false);
-            xhr.setRequestHeader('apikey', ANON_KEY);
-            xhr.setRequestHeader('Authorization', 'Bearer ' + ANON_KEY);
+            xhr.open('GET', supabaseUrl + '/rest/v1/articles?select=title,description,image_url,category&limit=1&id=eq.' + articleId, false);
+            xhr.setRequestHeader('apikey', anonKey);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + anonKey);
             xhr.send();
 
             if (xhr.status === 200) {
               var data = JSON.parse(xhr.responseText);
               if (data && data.length > 0) {
                 var article = data[0];
-                var title = (article.title || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-                var desc = (article.description || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').substring(0, 200);
+                var title = (article.title || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                var desc = (article.description || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').substring(0, 200);
                 var image = article.image_url || '';
 
-                // Set OG tags in DOM
                 document.title = title + ' | إيرام 24';
 
-                var setMeta = function(prop, content) {
+                var setMeta = function (prop, content) {
                   var el = document.createElement('meta');
                   el.setAttribute('property', prop);
                   el.setAttribute('content', content);
                   document.head.appendChild(el);
                 };
 
-                var setName = function(name, content) {
+                var setName = function (name, content) {
                   var el = document.createElement('meta');
                   el.setAttribute('name', name);
                   el.setAttribute('content', content);
@@ -75,7 +74,7 @@
 
                 setMeta('og:title', title);
                 setMeta('og:description', desc);
-                setMeta('og:url', 'https://fakyou050-dot.github.io' + repoBase + '/article/' + articleId);
+                setMeta('og:url', siteOrigin + '/article/' + articleId);
                 setMeta('og:type', 'article');
                 setName('description', desc);
                 setName('twitter:title', title);
@@ -92,44 +91,38 @@
                   setName('twitter:card', 'summary');
                 }
 
-                // JSON-LD for Google
                 var ld = document.createElement('script');
                 ld.type = 'application/ld+json';
                 ld.text = JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "NewsArticle",
-                  "headline": article.title,
-                  "description": article.description || '',
-                  "image": image ? [image] : undefined,
-                  "datePublished": new Date().toISOString(),
-                  "publisher": {"@type": "Organization", "name": "إيرام 24"}
+                  '@context': 'https://schema.org',
+                  '@type': 'NewsArticle',
+                  headline: article.title,
+                  description: article.description || '',
+                  image: image ? [image] : undefined,
+                  datePublished: new Date().toISOString(),
+                  publisher: { '@type': 'Organization', name: 'إيرام 24' }
                 });
                 document.head.appendChild(ld);
 
-                // For CRAWLERS: stay on this page (they read the HTML with OG tags)
-                // For HUMANS: redirect to SPA
                 if (!isCrawler) {
                   l.replace(target);
                 }
                 return;
               }
             }
-          } catch(e) {}
+          } catch (e) {}
 
-          // Fallback
           l.replace(target);
           return;
         }
 
-        // Default SPA redirect
-        l.replace(repoBase + '/?/' + path.replace(/^\//, '') + (l.search ? '&' + l.search.slice(1) : '') + l.hash);
+        redirectToSpa(path);
       })();
     </script>
   </head>
   <body>
-    <!-- Visible content for crawlers that don't execute JS -->
     <h1>إيرام 24</h1>
-    <p>جاري تحميل المقال...</p>
+    <p>جاري تحميل المحتوى...</p>
     <p><a href="/">العودة للرئيسية</a></p>
   </body>
 </html>

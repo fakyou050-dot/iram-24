@@ -5,9 +5,9 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = ***"SUPABASE_URL")!;
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_ANON_KEY")!;
-const SITE = "https://fakyou050-dot.github.io/iram-24";
+const SITE = Deno.env.get("SITE_URL") || "https://iram-24.vercel.app";
 
 // Known crawler user agents
 const CRAWLER_AGENTS = [

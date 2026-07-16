@@ -82,7 +82,6 @@ export const RadioProvider = ({ children }: { children: ReactNode }) => {
       next.delete("play");
       setSearchParams(next, { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 interface LazyImageProps {
   src: string;
@@ -12,11 +12,12 @@ interface LazyImageProps {
   /** Optional explicit width/height to reserve space and avoid CLS. */
   width?: number;
   height?: number;
+  style?: CSSProperties;
 }
 
 const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E";
 
-const LazyImage = ({ src, alt, className = "", loading = "lazy", fetchPriority, onError, fallback, width, height }: LazyImageProps) => {
+const LazyImage = ({ src, alt, className = "", loading = "lazy", fetchPriority, onError, fallback, width, height, style }: LazyImageProps) => {
   const [isVisible, setIsVisible] = useState(loading === "eager");
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -46,9 +47,10 @@ const LazyImage = ({ src, alt, className = "", loading = "lazy", fetchPriority, 
       className={className}
       loading={loading}
       decoding="async"
-      {...({ fetchpriority: fetchPriority || (loading === "eager" ? "high" : undefined) } as any)}
+      fetchPriority={fetchPriority || (loading === "eager" ? "high" : undefined)}
       width={width}
       height={height}
+      style={style}
       onError={() => {
         setHasError(true);
         onError?.();

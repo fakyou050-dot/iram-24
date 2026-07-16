@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getBlockedWords, removeBlockedWords } from "@/lib/blockedWords";
+import { PUBLIC_ENV } from "@/config/public";
 
 export interface Article {
   id: string;
@@ -82,14 +83,14 @@ async function fetchEdgeDirect(language: string, category: string | undefined, l
   try {
     const params = new URLSearchParams({ lang: language, limit: String(limit) });
     if (category && category !== "الرئيسية" && category !== "Home") params.set("category", category);
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/home-feed?${params.toString()}`;
+    const url = `${PUBLIC_ENV.supabaseUrl}/functions/v1/home-feed?${params.toString()}`;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 7000);
     const res = await fetch(url, {
       signal: ctrl.signal,
       headers: {
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        apikey: PUBLIC_ENV.supabasePublishableKey,
+        Authorization: `Bearer ${PUBLIC_ENV.supabasePublishableKey}`,
       },
     });
     clearTimeout(timer);
@@ -185,7 +186,6 @@ export function useArticles(language: "AR" | "EN", category?: string, limit = 30
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
       supabase.removeChannel(channel);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, category, limit]);
 
   return { articles, loading };

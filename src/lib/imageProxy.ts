@@ -3,7 +3,9 @@
  * hotlink protection, CORS blocks, and missing Referer headers.
  */
 
-const PROXY_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/image-proxy`;
+import { PUBLIC_ENV } from "@/config/public";
+
+const PROXY_BASE = `${PUBLIC_ENV.supabaseUrl}/functions/v1/image-proxy`;
 
 /** Domains known to block direct hotlinking */
 const BLOCKED_DOMAINS = [
@@ -21,7 +23,7 @@ const BLOCKED_DOMAINS = [
 function needsProxy(url: string): boolean {
   try {
     const hostname = new URL(url).hostname.replace(/^www\./, "");
-    return BLOCKED_DOMAINS.some((d) => hostname.includes(d));
+    return BLOCKED_DOMAINS.some((domain) => hostname.includes(domain));
   } catch {
     return false;
   }

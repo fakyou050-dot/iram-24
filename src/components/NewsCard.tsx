@@ -67,7 +67,11 @@ const NewsCard = ({ article, language, variant = "medium", onBeforeNavigate }: N
     const url = `${window.location.origin}/article/${article.id}`;
     const text = `${decodeHtmlEntities(article.title)} - إيرام برس\n${url}`;
     if (navigator.share) {
-      try { await navigator.share({ title: decodeHtmlEntities(article.title), text, url }); } catch {}
+      try {
+        await navigator.share({ title: decodeHtmlEntities(article.title), text, url });
+      } catch {
+        return;
+      }
     } else {
       await navigator.clipboard.writeText(text);
     }
@@ -80,7 +84,7 @@ const NewsCard = ({ article, language, variant = "medium", onBeforeNavigate }: N
   const displayCategory = normalizeCategory(article.category);
   const meta = useMemo(
     () => classify(article.title, article.description, language),
-    [article.id, article.title, article.description, language]
+    [article.title, article.description, language]
   );
   const isBreaking = meta.breaking;
   const geoTag = meta.tags.find((t) => ["اليمن", "عربي", "دولي", "Yemen", "Arab", "World"].includes(t));
@@ -98,7 +102,8 @@ const NewsCard = ({ article, language, variant = "medium", onBeforeNavigate }: N
             <LazyImage
               src={imgSrc}
               alt={title}
-              className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
+              className="w-full h-full object-cover transition-transform group-hover:scale-110"
+              style={{ transitionDuration: "1200ms" }}
               loading="eager"
               onError={() => setImgError(true)}
               fallback={<GradientPlaceholder category={displayCategory} />}

@@ -5,9 +5,14 @@
  */
 import { writeFileSync } from "fs";
 
-const SUPABASE_URL = "https://zifhmbbhqgoqvqeofhtw.supabase.co";
-const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8";
-const SITE = "https://fakyou050-dot.github.io/iram-24";
+const DEFAULT_SUPABASE_URL = "https://zifhmbbhqgoqvqeofhtw.supabase.co";
+const DEFAULT_SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8";
+const DEFAULT_SITE_URL = "https://iram-24.vercel.app";
+
+const SUPABASE_URL = (process.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL).replace(/\/+$/, "");
+const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || DEFAULT_SUPABASE_KEY;
+const SITE = (process.env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
 
 function escapeXml(str) {
   return (str || "")
@@ -68,8 +73,6 @@ async function main() {
   console.log(`Found ${articles.length} articles`);
 
   const now = new Date().toUTCString();
-
-  // RSS 2.0 with namespaces
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
      xmlns:atom="http://www.w3.org/2005/Atom"
@@ -90,23 +93,21 @@ async function main() {
     <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />
 `;
 
-  // Add latest 100 articles to feed
   const feedArticles = articles.slice(0, 100);
 
-  for (const a of feedArticles) {
-    const title = escapeXml(a.title || "");
-    const link = `${SITE}/article/${a.id}`;
-    const desc = escapeXml(stripHtml(a.description || a.content || "").slice(0, 500));
-    const pubDate = rfc822Date(a.published_at);
-    const author = escapeXml(a.author_name || "إيرام 24");
-    const category = escapeXml(a.category || "");
-    const image = a.image_url || "";
-    const guid = `${SITE}/article/${a.id}`;
+  for (const article of feedArticles) {
+    const title = escapeXml(article.title || "");
+    const link = `${SITE}/article/${article.id}`;
+    const desc = escapeXml(stripHtml(article.description || article.content || "").slice(0, 500));
+    const pubDate = rfc822Date(article.published_at);
+    const author = escapeXml(article.author_name || "إيرام 24");
+    const category = escapeXml(article.category || "");
+    const image = article.image_url || "";
 
     xml += `    <item>
       <title>${title}</title>
       <link>${link}</link>
-      <guid isPermaLink="true">${guid}</guid>
+      <guid isPermaLink="true">${link}</guid>
       <description>${desc}</description>
       <pubDate>${pubDate}</pubDate>
       <author>${author}</author>
@@ -128,9 +129,8 @@ async function main() {
 
   writeFileSync("public/rss.xml", xml, "utf-8");
 
-  // Stats
-  const arCount = feedArticles.filter((a) => a.language === "AR").length;
-  const enCount = feedArticles.filter((a) => a.language === "EN").length;
+  const arCount = feedArticles.filter((article) => article.language === "AR").length;
+  const enCount = feedArticles.filter((article) => article.language === "EN").length;
   console.log(`✅ RSS feed generated: public/rss.xml`);
   console.log(`   ${feedArticles.length} articles (AR: ${arCount}, EN: ${enCount})`);
   console.log(`   Feed URL: ${SITE}/rss.xml`);

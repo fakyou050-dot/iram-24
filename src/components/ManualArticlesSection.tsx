@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Article } from "@/hooks/useArticles";
 import { timeAgo } from "@/lib/newsUtils";
+import { PUBLIC_ENV } from "@/config/public";
+import { normalizeImageUrl } from "@/lib/contentParser";
+import { proxyImageUrl } from "@/lib/imageProxy";
+import LazyImage from "@/components/LazyImage";
 
 interface ManualArticlesSectionProps {
   language: "AR" | "EN";
@@ -15,10 +19,10 @@ const ManualArticlesSection = ({ language }: ManualArticlesSectionProps) => {
     const fetchManual = async () => {
       try {
         const params = new URLSearchParams({ lang: language, limit: "20" });
-        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/home-feed?${params.toString()}`, {
+        const res = await fetch(`${PUBLIC_ENV.supabaseUrl}/functions/v1/home-feed?${params.toString()}`, {
           headers: {
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            apikey: PUBLIC_ENV.supabasePublishableKey,
+            Authorization: `Bearer ${PUBLIC_ENV.supabasePublishableKey}`,
           },
           signal: AbortSignal.timeout(4500),
         });
@@ -45,12 +49,22 @@ const ManualArticlesSection = ({ language }: ManualArticlesSectionProps) => {
           <div key={article.id} className="bg-card rounded-xl overflow-hidden border border-border cursor-pointer"
             onClick={() => navigate(`/article/${article.id}`)}>
             {article.image_url && (
-              <img src={article.image_url} alt={article.title} className="w-full aspect-video object-contain bg-secondary" loading="lazy" />
+              <LazyImage
+                src={proxyImageUrl(normalizeImageUrl(article.image_url))}
+                alt={article.title}
+                className="w-full aspect-video object-contain bg-secondary"
+                loading="lazy"
+              />
             )}
             <div className="p-3">
               <div className="flex items-center gap-2 mb-2">
                 {article.author_image_url && (
-                  <img src={article.author_image_url} alt={article.author_name || ""} className="w-6 h-6 rounded-full object-cover shrink-0" />
+                  <LazyImage
+                    src={proxyImageUrl(normalizeImageUrl(article.author_image_url))}
+                    alt={article.author_name || ""}
+                    className="w-6 h-6 rounded-full object-cover shrink-0"
+                    loading="lazy"
+                  />
                 )}
                 <h4 className="text-foreground font-bold text-sm leading-snug line-clamp-2 flex-1">{article.title}</h4>
               </div>

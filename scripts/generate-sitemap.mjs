@@ -5,9 +5,14 @@
  */
 import { writeFileSync } from "fs";
 
-const SUPABASE_URL = "https://zifhmbbhqgoqvqeofhtw.supabase.co";
-const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8";
-const SITE = "https://fakyou050-dot.github.io/iram-24";
+const DEFAULT_SUPABASE_URL = "https://zifhmbbhqgoqvqeofhtw.supabase.co";
+const DEFAULT_SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppZmhtYmJocWdvcXZxZW9maHR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NzIzOTIsImV4cCI6MjA5OTQ0ODM5Mn0.sbth2PRkMOXS1tEyIXujYcpfiMabltLZAcR_1B35BZ8";
+const DEFAULT_SITE_URL = "https://iram-24.vercel.app";
+
+const SUPABASE_URL = (process.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL).replace(/\/+$/, "");
+const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || DEFAULT_SUPABASE_KEY;
+const SITE = (process.env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
 
 function escapeXml(str) {
   return (str || "")
@@ -65,7 +70,6 @@ async function main() {
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Homepage -->
   <url>
     <loc>${SITE}/</loc>
     <lastmod>${today}</lastmod>
@@ -73,7 +77,6 @@ async function main() {
     <priority>1.0</priority>
   </url>
 
-  <!-- Categories -->
   <url>
     <loc>${SITE}/categories</loc>
     <lastmod>${today}</lastmod>
@@ -81,68 +84,60 @@ async function main() {
     <priority>0.8</priority>
   </url>
 
-  <!-- Radio -->
   <url>
     <loc>${SITE}/radio</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- Settings -->
   <url>
     <loc>${SITE}/settings</loc>
     <changefreq>monthly</changefreq>
     <priority>0.2</priority>
   </url>
 
-  <!-- Favorites -->
   <url>
     <loc>${SITE}/favorites</loc>
     <changefreq>monthly</changefreq>
     <priority>0.2</priority>
   </url>
 
-  <!-- About -->
   <url>
     <loc>${SITE}/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
-  <!-- Privacy -->
   <url>
     <loc>${SITE}/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Terms -->
   <url>
     <loc>${SITE}/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Contact -->
   <url>
     <loc>${SITE}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
-
 `;
 
-  for (const a of articles) {
-    const url = `${SITE}/article/${a.id}`;
-    const lastmod = isoDate(a.published_at);
-    const title = escapeXml(a.title || "");
-    const lang = a.language === "EN" ? "en" : "ar";
-    const pubDate = a.published_at
-      ? new Date(a.published_at).toUTCString()
+  for (const article of articles) {
+    const url = `${SITE}/article/${article.id}`;
+    const lastmod = isoDate(article.published_at);
+    const title = escapeXml(article.title || "");
+    const lang = article.language === "EN" ? "en" : "ar";
+    const pubDate = article.published_at
+      ? new Date(article.published_at).toUTCString()
       : new Date().toUTCString();
-    const author = escapeXml(a.author_name || "إيرام 24");
 
-    xml += `  <url>
+    xml += `
+  <url>
     <loc>${url}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>daily</changefreq>
@@ -154,31 +149,30 @@ async function main() {
       </news:publication>
       <news:publication_date>${pubDate}</news:publication_date>
       <news:title>${title}</news:title>
-      <news:keywords>${escapeXml(a.category || "")}</news:keywords>
+      <news:keywords>${escapeXml(article.category || "")}</news:keywords>
     </news:news>`;
 
-    if (a.image_url) {
+    if (article.image_url) {
       xml += `
     <image:image>
-      <image:loc>${escapeXml(a.image_url)}</image:loc>
+      <image:loc>${escapeXml(article.image_url)}</image:loc>
       <image:title>${title}</image:title>
     </image:image>`;
     }
 
     xml += `
-  </url>
-`;
+  </url>`;
   }
 
-  xml += `</urlset>`;
+  xml += `
+</urlset>`;
 
   writeFileSync("public/sitemap.xml", xml, "utf-8");
 
-  // Stats
-  const arCount = articles.filter((a) => a.language === "AR").length;
-  const enCount = articles.filter((a) => a.language === "EN").length;
-  const categories = [...new Set(articles.map((a) => a.category))];
-  const withImages = articles.filter((a) => a.image_url).length;
+  const arCount = articles.filter((article) => article.language === "AR").length;
+  const enCount = articles.filter((article) => article.language === "EN").length;
+  const categories = [...new Set(articles.map((article) => article.category))];
+  const withImages = articles.filter((article) => article.image_url).length;
 
   console.log(`\nSitemap generated successfully!`);
   console.log(`  Total articles: ${articles.length}`);
